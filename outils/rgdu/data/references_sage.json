@@ -1,0 +1,103 @@
+{
+  "title": "Références Sage Paie 100 (rubriques et constantes)",
+  "subtitle": "Correspondances directes présentes dans le simulateur RGDU",
+  "note": "Correspondances réalisées selon le paramétrage de la RGDU décrit dans le document PPS1_01_AllegementFillon.pdf téléchargeable depuis la tuile « Allègements et réductions » de la section PPS de Sage Paie 100.",
+  "rubriques": [
+    {
+      "code": "13785",
+      "libelle": "PPV pour calcul RGCP",
+      "cellule": "Simulation!B25",
+      "valeur_excel": "None",
+      "commentaire": "Valeur saisie (PPV sur période)"
+    },
+    {
+      "code": "63460",
+      "libelle": "Historisation SMICMENS",
+      "cellule": "Simulation!E38",
+      "valeur_excel": "None",
+      "commentaire": "SMIC annuel de référence (annualisé dans le simulateur)"
+    },
+    {
+      "code": "63470",
+      "libelle": "Historisation Rémunération",
+      "cellule": "Simulation!B24",
+      "valeur_excel": "None",
+      "commentaire": "Rémunération sur période (hors PPV)"
+    },
+    {
+      "code": "63492",
+      "libelle": "Historisation DFS",
+      "commentaire": "Taux DFS appliqué (0 si pas de DFS)."
+    },
+    {
+      "code": "63500",
+      "libelle": "Allègement des cotisations",
+      "cellule": "Simulation!E46",
+      "valeur_excel": "None",
+      "commentaire": "Montant d’allègement (annuel) ; voir aussi E47 (mensuel) / E48 (affiché)"
+    },
+    {
+      "code": "79580",
+      "libelle": "Coefficient Allègement général",
+      "cellule": "Simulation!E45",
+      "valeur_excel": "None",
+      "commentaire": "Coefficient final (arrondi à 4 décimales)"
+    }
+  ],
+  "constantes": [
+    {
+      "code": "ALG_EXPOS",
+      "libelle": "Valeur exposant (P)",
+      "cellule": "Parametres!B6",
+      "valeur_excel": "None",
+      "commentaire": "Exposant de la formule (P)"
+    },
+    {
+      "code": "ALG_MAXSMI",
+      "libelle": "Valeur à appliquer au SMIC",
+      "cellule": "Simulation!E40",
+      "valeur_excel": "None",
+      "commentaire": "Seuil d’annulation (3 × SMIC annuel)"
+    },
+    {
+      "code": "ALG_REDUC",
+      "libelle": "Montant global de l’allègement",
+      "cellule": "Simulation!E46",
+      "valeur_excel": "None",
+      "commentaire": "Montant d’allègement (annuel)"
+    },
+    {
+      "code": "ALG_REMUNA",
+      "libelle": "Rémunération annuelle",
+      "cellule": "Simulation!E41",
+      "valeur_excel": "None",
+      "commentaire": "Rémunération annualisée incluant PPV"
+    },
+    {
+      "code": "ALG_SMICAN",
+      "libelle": "SMIC annuel",
+      "cellule": "Simulation!E38",
+      "valeur_excel": "None",
+      "commentaire": "SMIC annuel de référence"
+    },
+    {
+      "code": "ALG_TDELTA",
+      "libelle": "Calcul de la valeur de Tdelta",
+      "cellule": "Simulation!E31",
+      "valeur_excel": "None",
+      "commentaire": "Tdelta retenu (standard ou personnalisé)"
+    },
+    {
+      "code": "ALG_TDFS",
+      "libelle": "Taux DFS",
+      "commentaire": "Taux de déduction forfaitaire spécifique (DFS) retenu."
+    },
+    {
+      "code": "ALG_TMIN",
+      "libelle": "Valeur Tmin",
+      "cellule": "Parametres!B5",
+      "valeur_excel": "None",
+      "commentaire": "Tmin de la formule"
+    }
+  ]
+}

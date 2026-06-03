@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nouvelle publication — PaieKipédia</title>
+  <link rel="stylesheet" href="../assets/kds-tokens.css" />
+  <link rel="icon" href="../assets/logo-koesio-data-solutions.png" />
+  <script src="data.js"></script>
+  <script src="../assets/config.js"></script>
+  <style>
+    @font-face{font-family:"Be Vietnam Pro";src:url("../bareme/assets/fonts/BeVietnamPro-Regular.ttf") format("truetype");font-weight:400;font-display:swap;}
+    @font-face{font-family:"Be Vietnam Pro";src:url("../bareme/assets/fonts/BeVietnamPro-Medium.ttf") format("truetype");font-weight:500;font-display:swap;}
+    @font-face{font-family:"Be Vietnam Pro";src:url("../bareme/assets/fonts/BeVietnamPro-SemiBold.ttf") format("truetype");font-weight:600;font-display:swap;}
+    @font-face{font-family:"Be Vietnam Pro";src:url("../bareme/assets/fonts/BeVietnamPro-Bold.ttf") format("truetype");font-weight:700;font-display:swap;}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --brand-1:#6e398e;--brand-2:#ea4b58;
+      --bg:#fbfbfd;--surface:#ffffff;--surface-2:#f5f6fa;
+      --text:#101828;--muted:#667085;--border:rgba(16,24,40,.12);
+      --shadow:0 10px 25px rgba(15,23,42,.08);
+      --radius:16px;--radius-md:12px;--radius-sm:8px;
+      --font:"Be Vietnam Pro","BeVietnam",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      --maxw:860px;
+      --ok:#1fae5a;--warn:#c48a00;
+    }
+    html,body{height:100%;}
+    body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+
+    /* ── Header ── */
+    .app-header{position:sticky;top:0;z-index:10;display:flex;gap:16px;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:0 1px 4px rgba(16,24,40,.05);}
+    .brand{display:flex;align-items:center;gap:14px;}
+    .brand-logo{height:38px;width:auto;}
+    .brand-text .title{font-size:15px;font-weight:700;letter-spacing:-.01em;}
+    .brand-text .subtitle{font-size:12px;color:var(--muted);margin-top:1px;}
+
+    /* ── Boutons ── */
+    .btn{height:36px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius-md);border:1px solid var(--border);padding:0 14px;font-family:var(--font);font-size:13px;font-weight:700;background:var(--surface);color:var(--text);cursor:pointer;transition:box-shadow .15s,border-color .15s,transform .1s;white-space:nowrap;}
+    .btn:hover{box-shadow:0 10px 26px rgba(16,24,40,.10);border-color:rgba(110,57,142,.28);}
+    .btn:active{transform:scale(.99);}
+    .btn-primary{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--brand-1),var(--brand-2));}
+    .btn-primary:hover{box-shadow:0 14px 40px rgba(110,57,142,.22);}
+    .btn-ghost{background:transparent;border-color:transparent;box-shadow:none;}
+    .btn-ghost:hover{background:rgba(16,24,40,.04);}
+    .btn[disabled]{opacity:.45;cursor:not-allowed;pointer-events:none;}
+
+    /* ── Main ── */
+    main{flex:1;max-width:var(--maxw);margin:0 auto;width:100%;padding:28px 18px 80px;}
+
+    /* ── Étapes ── */
+    .step{display:none;}
+    .step.active{display:block;}
+
+    /* ── Zone de dépôt ── */
+    .drop-zone{
+      background:var(--surface);
+      border:2px dashed var(--border);
+      border-radius:var(--radius);
+      padding:2rem;
+      transition:border-color .2s,background .2s;
+    }
+    .drop-zone:focus-within{border-color:rgba(110,57,142,.4);background:rgba(110,57,142,.02);}
+    .drop-zone label{display:block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    .drop-zone textarea{
+      width:100%;min-height:240px;
+      font-family:var(--font);font-size:13px;line-height:1.65;
+      padding:12px 14px;
+      border:1px solid var(--border);border-radius:var(--radius-md);
+      background:var(--surface-2);color:var(--text);
+      resize:vertical;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .drop-zone textarea:focus{outline:none;border-color:rgba(110,57,142,.5);box-shadow:0 0 0 3px rgba(110,57,142,.10);background:var(--surface);}
+    .drop-zone textarea::placeholder{color:var(--muted);}
+    .drop-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+    .char-count{font-size:12px;color:var(--muted);}
+
+    /* ── Progress ── */
+    .progress-wrap{padding:2rem 0;text-align:center;}
+    .progress-msg{font-size:13px;color:var(--muted);margin-bottom:14px;min-height:20px;}
+    .progress-bar-outer{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;max-width:320px;margin:0 auto;}
+    .progress-bar-inner{height:100%;width:0%;background:linear-gradient(90deg,var(--brand-1),var(--brand-2));border-radius:2px;transition:width .4s ease;}
+
+    /* ── Formulaire résultat ── */
+    .result-banner{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 14px;margin-bottom:20px;
+      background:rgba(31,174,90,.07);
+      border:1px solid rgba(31,174,90,.20);
+      border-radius:var(--radius-md);
+      font-size:13px;color:var(--ok);font-weight:600;
+    }
+    .result-banner svg{flex-shrink:0;}
+
+    .form-grid{display:flex;flex-direction:column;gap:14px;}
+    .field{display:flex;flex-direction:column;gap:5px;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .field label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+    .field-hint{font-size:11px;color:var(--muted);margin-top:2px;}
+    input[type=text],input[type=date],input[type=url],select,textarea{
+      font-family:var(--font);font-size:13px;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-sm);color:var(--text);
+      padding:8px 10px;width:100%;
+      transition:border-color .15s,box-shadow .15s;
+      resize:vertical;
+    }
+    input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(110,57,142,.5);box-shadow:0 0 0 3px rgba(110,57,142,.12);}
+    .section-sep{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:4px;border-top:1px solid var(--border);}
+
+    /* Logiciels checkboxes */
+    .logiciel-checks{display:flex;gap:10px;flex-wrap:wrap;}
+    .logiciel-check{
+      display:flex;align-items:center;gap:7px;
+      font-size:13px;font-weight:600;cursor:pointer;
+      padding:6px 14px;
+      border:1px solid var(--border);border-radius:999px;
+      background:var(--surface);
+      transition:all .15s;
+      user-select:none;
+    }
+    .logiciel-check input{display:none;}
+    .logiciel-check.checked{background:rgba(110,57,142,.08);border-color:rgba(110,57,142,.3);color:var(--brand-1);}
+
+    /* Réforme liée — select */
+    .reforme-select{position:relative;}
+
+    /* Actions finales */
+    .form-actions{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;}
+    .form-actions .btn-secondary-sm{height:30px;font-size:12px;font-weight:700;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font);cursor:pointer;transition:all .15s;}
+    .form-actions .btn-secondary-sm:hover{border-color:rgba(110,57,142,.3);color:var(--text);}
+
+    /* JSON preview */
+    .json-preview{
+      margin-top:14px;
+      background:var(--surface-2);border:1px solid var(--border);
+      border-radius:var(--radius-md);padding:14px;
+      font-family:monospace;font-size:11px;line-height:1.6;color:var(--muted);
+      white-space:pre-wrap;word-break:break-all;
+      max-height:280px;overflow-y:auto;
+      display:none;
+    }
+
+    /* Erreur */
+    .error-box{padding:14px 16px;background:rgba(217,54,62,.06);border:1px solid rgba(217,54,62,.20);border-radius:var(--radius-md);font-size:13px;color:#d9363e;}
+
+    /* ── Footer ── */
+    .app-footer{border-top:1px solid var(--border);background:var(--surface);}
+    .footer-inner{max-width:var(--maxw);margin:0 auto;padding:14px 18px;display:flex;justify-content:space-between;font-size:12px;color:var(--muted);}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:linear-gradient(135deg,var(--brand-1),var(--brand-2));color:#fff;font-family:var(--font);font-size:13px;font-weight:700;padding:8px 20px;border-radius:999px;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 24px rgba(110,57,142,.3);}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <img class="brand-logo" src="../assets/logo-koesio-data-solutions.png" alt="Koesio Data Solutions" />
+    <div class="brand-text">
+      <div class="title">Nouvelle publication veille</div>
+      <div class="subtitle">PaieKipédia by KDS — import intelligent</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a class="btn btn-ghost" href="index.html">← Réformes</a>
+    <a class="btn btn-ghost" href="../index.html">Portail</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Étape 1 : dépôt du texte -->
+  <div class="step active" id="step-input">
+    <div style="margin-bottom:20px;">
+      <h1 style="font-size:20px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;">Déposer une publication</h1>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6;">Collez le texte complet de votre note Teams. Claude l'analyse et pré-remplit la fiche — vous n'avez plus qu'à vérifier, ajouter le lien Teams, et enregistrer.</p>
+    </div>
+
+    <div class="drop-zone">
+      <label for="texteInput">Texte de la publication Teams</label>
+      <textarea id="texteInput"
+        placeholder="Collez ici le texte complet de votre publication Teams…&#10;&#10;Exemples : actualité DSN, revalorisation SMIC, jurisprudence, mise à jour logiciel, nouvelle norme…"
+        oninput="updateCounter(this)"></textarea>
+      <div class="drop-footer">
+        <span class="char-count" id="charCount">0 caractère</span>
+        <button class="btn btn-primary" id="btnAnalyse" onclick="lanceAnalyse()" disabled>
+          ✦ Analyser avec Claude
+        </button>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-md);border:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Ce que Claude va détecter automatiquement</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Titre synthétique</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Date d'effet</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Résumé 2-3 phrases</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Thèmes & tags</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Source réglementaire</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Logiciels concernés</span>
+        <span style="font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted);">Réforme liée</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;">Le lien Teams reste à coller manuellement — impossible à deviner.</div>
+    </div>
+  </div>
+
+  <!-- Étape 2 : analyse en cours -->
+  <div class="step" id="step-loading">
+    <div class="progress-wrap">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px;">Analyse en cours…</div>
+      <div class="progress-msg" id="progressMsg">Lecture du texte…</div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    </div>
+  </div>
+
+  <!-- Étape 3 : formulaire résultat -->
+  <div class="step" id="step-result">
+    <div class="result-banner">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="#1fae5a"/><path d="M5 8l2 2 4-4" stroke="#1fae5a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Analyse terminée — vérifiez les champs, ajoutez le lien Teams, puis enregistrez.
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Titre</label>
+        <input type="text" id="r-titre" placeholder="Titre synthétique de la publication">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Date d'effet</label>
+          <input type="date" id="r-date">
+        </div>
+        <div class="field">
+          <label>Source réglementaire</label>
+          <input type="text" id="r-source" placeholder="Loi, décret, fiche net-entreprises…">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Résumé</label>
+        <textarea id="r-resume" rows="3" placeholder="Résumé factuel en 2-3 phrases"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Thèmes / tags</label>
+        <input type="text" id="r-themes" placeholder="DSN, SMIC, Norme P27V01… (séparés par virgule)">
+      </div>
+
+      <div class="field">
+        <label>Logiciels concernés</label>
+        <div class="logiciel-checks">
+          <label class="logiciel-check" id="lbl-sage" onclick="toggleLog('sage')">
+            <input type="checkbox" id="log-sage"> Sage Paie
+          </label>
+          <label class="logiciel-check" id="lbl-silae" onclick="toggleLog('silae')">
+            <input type="checkbox" id="log-silae"> Silae
+          </label>
+          <label class="logiciel-check" id="lbl-lucca" onclick="toggleLog('lucca')">
+            <input type="checkbox" id="log-lucca"> Lucca
+          </label>
+        </div>
+      </div>
+
+      <div class="section-sep">Rattachement &amp; diffusion</div>
+
+      <div class="field">
+        <label>Réforme liée dans le tableau de bord</label>
+        <select id="r-reforme">
+          <option value="">— Aucune ou non identifiée —</option>
+        </select>
+        <div class="field-hint">Si la publication correspond à une réforme suivie, sélectionnez-la pour lier les deux entrées.</div>
+      </div>
+
+      <div class="field">
+        <label>Lien post Teams <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(à coller manuellement)</span></label>
+        <input type="url" id="r-teams" placeholder="https://teams.microsoft.com/l/message/…">
+      </div>
+
+      <div class="section-sep">Aperçu JSON</div>
+
+      <div>
+        <button class="btn" onclick="toggleJson()" style="margin-bottom:8px;font-size:12px;height:30px;padding:0 12px;">
+          { } Afficher le JSON généré
+        </button>
+        <pre class="json-preview" id="jsonPreview"></pre>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary-sm" onclick="reset()">↺ Recommencer</button>
+        <div style="flex:1;"></div>
+        <button class="btn-secondary-sm" onclick="copierJSON()">Copier JSON</button>
+        <button class="btn btn-primary" onclick="enregistrer()">Enregistrer dans la bibliothèque ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Erreur -->
+  <div class="step" id="step-error">
+    <div class="error-box" id="errorMsg"></div>
+    <button class="btn" onclick="reset()" style="margin-top:14px;">↺ Réessayer</button>
+  </div>
+
+  <!-- Confirmation -->
+  <div class="step" id="step-done">
+    <div style="text-align:center;padding:3rem 1rem;">
+      <div style="font-size:2rem;margin-bottom:12px;">✓</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:8px;">Publication enregistrée</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">La fiche est ajoutée à la bibliothèque de veille.</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn" onclick="reset()">Ajouter une autre publication</button>
+        <a class="btn btn-primary" href="index.html">Voir le tableau de bord</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="app-footer">
+  <div class="footer-inner">
+    <span>© 2026 Koesio Data Solutions</span>
+    <span>PaieKipédia — Module import veille</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config ──────────────────────────────────────────────
+const STORAGE_KEY_VEILLE = "paiekipedia-veille-v1";
+const CLAUDE_MODEL = "claude-sonnet-4-20250514";
+
+// ── Prompt calibré sur le style rédactionnel KDS ────────
+const SYSTEM_PROMPT = `Tu es un assistant expert en paie et droit social français, au service du cabinet KDS (Koesio Data Solutions).
+Tu analyses des publications de veille légale rédigées par Philippe, consultant paie senior, et tu en extrais les métadonnées structurées.
+Le style des publications KDS est : titre accrocheur avec angle pratique, rappel du mécanisme réglementaire, impacts concrets par logiciel (Sage Paie 100, Silae, Lucca), sources citées en bas.
+Retourne UNIQUEMENT un objet JSON valide, sans texte avant ni après, sans balises markdown ni backticks.`;
+
+const USER_PROMPT_TPL = (texte, reformes) => `Analyse cette publication de veille légale KDS et retourne un objet JSON avec cette structure exacte :
+{
+  "titre": "titre synthétique max 12 mots, reprenant l'angle pratique de la publication",
+  "dateEffet": "YYYY-MM-DD si une date d'application est mentionnée, sinon null",
+  "resume": "résumé factuel 2-3 phrases, style professionnel RH, utilisable directement comme description",
+  "themes": ["tag1", "tag2"],
+  "source": "référence réglementaire complète extraite du texte (loi, décret, article de code, fiche net-entreprises, numéro fiche consigne…)",
+  "sourceUrl": "URL si mentionnée dans le texte, sinon null",
+  "logiciels": { "sage": true/false, "silae": true/false, "lucca": true/false },
+  "reformeId": "id de la réforme liée parmi cette liste, ou null si aucune correspondance évidente : ${reformes}"
+}
+
+Règles :
+- themes : mots-clés courts du vocabulaire paie/RH/DSN (ex: DSN, SPST, Norme P27V01, Plafond SS, Forfait jours, Sage Paie, Silae)
+- logiciels : true uniquement si le logiciel est explicitement nommé dans le texte
+- dateEffet : date d'APPLICATION de la mesure (pas la date de publication ou de la fiche consigne)
+- reformeId : cherche une correspondance thématique forte avec les ids fournis — null si doute
+
+Texte à analyser :
+${texte}`;
+
+// ── État ─────────────────────────────────────────────────
+let veille = [];
+let jsonVisible = false;
+
+// ── Init ─────────────────────────────────────────────────
+function init() {
+  try { veille = JSON.parse(localStorage.getItem(STORAGE_KEY_VEILLE) || "[]"); } catch(e) { veille = []; }
+  populerSelectReformes();
+}
+
+function populerSelectReformes() {
+  const sel = document.getElementById("r-reforme");
+  const reformes = (typeof REFORMES_DATA !== "undefined") ? REFORMES_DATA : [];
+  reformes.forEach(r => {
+    const opt = document.createElement("option");
+    opt.value = r.id;
+    opt.textContent = r.titre.length > 70 ? r.titre.slice(0, 70) + "…" : r.titre;
+    sel.appendChild(opt);
+  });
+}
+
+function getReformesIds() {
+  return (typeof REFORMES_DATA !== "undefined") ? REFORMES_DATA.map(r => r.id).join(", ") : "";
+}
+
+// ── Saisie ────────────────────────────────────────────────
+function updateCounter(el) {
+  const n = el.value.length;
+  document.getElementById("charCount").textContent = n.toLocaleString("fr-FR") + " caractère" + (n > 1 ? "s" : "");
+  document.getElementById("btnAnalyse").disabled = n < 80;
+}
+
+// ── Analyse ───────────────────────────────────────────────
+async function lanceAnalyse() {
+  const texte = document.getElementById("texteInput").value.trim();
+  if (texte.length < 80) return;
+
+  afficherEtape("step-loading");
+
+  const msgs = [
+    "Lecture du texte…",
+    "Détection des thèmes réglementaires…",
+    "Identification des logiciels concernés…",
+    "Extraction de la source réglementaire…",
+    "Recherche de la réforme liée…",
+    "Génération du résumé…"
+  ];
+  let mi = 0;
+  const bar = document.getElementById("progressBar");
+  const msg = document.getElementById("progressMsg");
+  const iv = setInterval(() => {
+    mi++;
+    msg.textContent = msgs[Math.min(mi, msgs.length - 1)];
+    bar.style.width = Math.min(mi * 17, 88) + "%";
+  }, 850);
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: CLAUDE_MODEL,
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: USER_PROMPT_TPL(texte, getReformesIds()) }]
+      })
+    });
+
+    clearInterval(iv);
+    bar.style.width = "100%";
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error("API " + resp.status + " — " + err.slice(0, 200));
+    }
+
+    const data = await resp.json();
+    const raw = data.content.filter(b => b.type === "text").map(b => b.text).join("");
+    const clean = raw.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+
+    remplirFormulaire(parsed);
+    afficherEtape("step-result");
+
+  } catch (e) {
+    clearInterval(iv);
+    document.getElementById("errorMsg").textContent = "Erreur : " + e.message;
+    afficherEtape("step-error");
+  }
+}
+
+// ── Formulaire ────────────────────────────────────────────
+function remplirFormulaire(d) {
+  document.getElementById("r-titre").value   = d.titre || "";
+  document.getElementById("r-date").value    = d.dateEffet || "";
+  document.getElementById("r-resume").value  = d.resume || "";
+  document.getElementById("r-themes").value  = (d.themes || []).join(", ");
+  document.getElementById("r-source").value  = d.source || "";
+
+  // Logiciels
+  ["sage", "silae", "lucca"].forEach(l => {
+    const checked = !!(d.logiciels && d.logiciels[l]);
+    document.getElementById("log-" + l).checked = checked;
+    document.getElementById("lbl-" + l).classList.toggle("checked", checked);
+  });
+
+  // Réforme liée
+  if (d.reformeId) {
+    const sel = document.getElementById("r-reforme");
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === d.reformeId) { sel.selectedIndex = i; break; }
+    }
+  }
+}
+
+function toggleLog(l) {
+  const cb = document.getElementById("log-" + l);
+  const lbl = document.getElementById("lbl-" + l);
+  // Le click sur le label toggle la checkbox via event natif — on synchronise juste le style
+  setTimeout(() => lbl.classList.toggle("checked", cb.checked), 0);
+}
+
+// ── JSON ──────────────────────────────────────────────────
+function buildJSON() {
+  const logiciels = [];
+  if (document.getElementById("log-sage").checked)  logiciels.push("Sage Paie");
+  if (document.getElementById("log-silae").checked) logiciels.push("Silae");
+  if (document.getElementById("log-lucca").checked) logiciels.push("Lucca");
+
+  return {
+    id: "pub-" + Date.now(),
+    titre:       document.getElementById("r-titre").value.trim(),
+    dateEffet:   document.getElementById("r-date").value || null,
+    resume:      document.getElementById("r-resume").value.trim(),
+    themes:      document.getElementById("r-themes").value.split(",").map(t => t.trim()).filter(Boolean),
+    source:      document.getElementById("r-source").value.trim() || null,
+    logiciels,
+    reformeId:   document.getElementById("r-reforme").value || null,
+    lienTeams:   document.getElementById("r-teams").value.trim() || null,
+    dateAjout:   new Date().toISOString().slice(0, 10)
+  };
+}
+
+function toggleJson() {
+  jsonVisible = !jsonVisible;
+  const pre = document.getElementById("jsonPreview");
+  pre.style.display = jsonVisible ? "block" : "none";
+  if (jsonVisible) pre.textContent = JSON.stringify(buildJSON(), null, 2);
+}
+
+async function copierJSON() {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(buildJSON(), null, 2));
+    showToast("JSON copié ✓");
+  } catch(e) {
+    showToast("Copie non disponible — utilisez le bouton Afficher le JSON");
+  }
+}
+
+function enregistrer() {
+  const entry = buildJSON();
+  if (!entry.titre) { alert("Le titre est requis."); return; }
+  veille.push(entry);
+  try { localStorage.setItem(STORAGE_KEY_VEILLE, JSON.stringify(veille)); } catch(e) {}
+  afficherEtape("step-done");
+}
+
+// ── Navigation ────────────────────────────────────────────
+function afficherEtape(id) {
+  document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function reset() {
+  document.getElementById("texteInput").value = "";
+  document.getElementById("charCount").textContent = "0 caractère";
+  document.getElementById("btnAnalyse").disabled = true;
+  jsonVisible = false;
+  document.getElementById("jsonPreview").style.display = "none";
+  afficherEtape("step-input");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+init();
+</script>
+</body>
+</html>

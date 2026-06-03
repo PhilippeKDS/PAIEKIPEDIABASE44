@@ -1,0 +1,45 @@
+{
+  "periodicite": [
+    "Mensuel",
+    "Annuel"
+  ],
+  "fnal": [
+    "0,10%",
+    "0,50%"
+  ],
+  "situation": [
+    "Cas general",
+    "Journalistes",
+    "Prof médicales TP",
+    "VRP multicartes",
+    "Personnalise"
+  ],
+  "majoration": [
+    "Aucune",
+    "Interimaires (x1, 1)",
+    "Caisses conges payes (x100/90)",
+    "Transport routier"
+  ],
+  "transport": [
+    "Aucun (1)",
+    "Grand routier (45/35)",
+    "Courte distance (40/35)"
+  ],
+  "typeHeures": [
+    "Heures mensuelles contractuelles",
+    "Forfait annuel (heures)",
+    "Forfait annuel (jours)"
+  ],
+  "dfs": [
+    "Pas de DFS",
+    "Construction — 7%",
+    "Propreté — 3%",
+    "Journalistes — 24%",
+    "Transport routier de marchandises — 17%",
+    "Aviation civile — 26%",
+    "Casino et cercle de jeux — 5%",
+    "VRP — 24%",
+    "Spectacle — musiciens/choristes/chefs/régisseurs — 16%",
+    "Spectacle — dramatiques/lyriques/cinéma/choré — 18%"
+  ]
+}

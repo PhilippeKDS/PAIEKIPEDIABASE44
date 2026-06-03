@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Cockpit des réformes — PaieKipédia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/kds-tokens.css">
+<style>
+
+  :root{
+    --bg:        oklch(0.17 0.02 260);
+    --bg-2:      oklch(0.21 0.02 260);
+    --panel:     oklch(0.235 0.022 260);
+    --panel-2:   oklch(0.265 0.024 260);
+    --line:      oklch(0.34 0.025 260);
+    --line-soft: oklch(0.28 0.022 260);
+    --text:      oklch(0.96 0.005 260);
+    --text-2:    oklch(0.78 0.012 260);
+    --muted:     oklch(0.58 0.018 260);
+    --dim:       oklch(0.42 0.018 260);
+
+    --upcoming:  oklch(0.74 0.18 300);   /* violet — À venir */
+    --ongoing:   oklch(0.80 0.16 75);    /* ambre — En cours */
+    --done:      oklch(0.74 0.16 150);   /* vert — Traité */
+    --now:       oklch(0.92 0.14 95);    /* halo NOW */
+
+    --r-card: 14px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-feature-settings:'ss01','cv11';overflow:hidden;height:100%}
+  body{
+    background:
+      radial-gradient(1200px 800px at 30% 20%, oklch(0.22 0.04 280 / .55), transparent 60%),
+      radial-gradient(900px 700px at 80% 90%, oklch(0.22 0.03 200 / .35), transparent 65%),
+      var(--bg);
+  }
+
+  /* ───── Frame ───── */
+  .cockpit{
+    height:100vh;
+    display:grid;
+    grid-template-columns: 320px 1fr 360px;
+    grid-template-rows: 64px 1fr 180px;
+    grid-template-areas:
+      "head head head"
+      "left scope right"
+      "left strip strip";
+    gap:14px;
+    padding:14px;
+  }
+
+  /* ───── Header ───── */
+  .head{
+    grid-area:head;
+    display:flex;align-items:center;gap:18px;
+    padding:0 18px;
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line-soft);
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .head::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 39px, oklch(1 0 0 / .025) 39px 40px);
+    pointer-events:none;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{
+    width:34px;height:34px;border-radius:9px;
+    background:
+      radial-gradient(circle at 30% 30%, oklch(0.85 0.16 300), oklch(0.55 0.2 290));
+    box-shadow: 0 0 0 1px oklch(1 0 0 / .15) inset, 0 8px 22px oklch(0.55 0.2 290 / .35);
+    position:relative;
+  }
+  .brand .mark::after{
+    content:"";position:absolute;inset:6px;border-radius:50%;
+    border:2px solid oklch(1 0 0 / .9);border-top-color:transparent;border-right-color:transparent;
+    transform:rotate(35deg);
+  }
+  .brand h1{font-size:14px;margin:0;font-weight:600;letter-spacing:.01em}
+  .brand small{display:block;font-size:11px;color:var(--muted);margin-top:1px;letter-spacing:.02em}
+
+  .head .sep{width:1px;height:34px;background:var(--line-soft)}
+
+  .crumbs{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+  .crumbs b{color:var(--text-2);font-weight:500}
+
+  .head .filler{flex:1}
+
+  .pill-row{display:flex;gap:8px}
+  .pill{
+    height:34px;padding:0 14px;border-radius:9px;
+    background:var(--panel-2);border:1px solid var(--line-soft);
+    color:var(--text-2);font-size:12px;display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;transition:.18s;
+    font-family:'JetBrains Mono',monospace;letter-spacing:.04em;
+  }
+  .pill:hover{border-color:var(--line);color:var(--text)}
+  .pill.primary{background:linear-gradient(180deg, oklch(0.6 0.2 295), oklch(0.46 0.22 290));border-color:transparent;color:#fff}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  /* ───── KPI cluster (left column, top of left panel) ───── */
+  .left{grid-area:left;display:flex;flex-direction:column;gap:14px;min-height:0}
+  .panel{
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line-soft);
+    border-radius:14px;
+    position:relative;
+  }
+  .panel-h{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px 6px;
+  }
+  .panel-h .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .panel-h .tag{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;
+    color:var(--dim);
+  }
+
+  .kpis{padding:10px 14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{
+    background:oklch(0.2 0.02 260);
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    padding:12px 13px 11px;
+    position:relative;overflow:hidden;
+    cursor:pointer;transition:.18s;
+  }
+  .kpi:hover{border-color:var(--line)}
+  .kpi .v{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:500;letter-spacing:-.02em;line-height:1}
+  .kpi .l{font-size:10px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .kpi.up    { box-shadow: inset 3px 0 0 var(--upcoming) }
+  .kpi.up    .v{color:var(--upcoming)}
+  .kpi.on    { box-shadow: inset 3px 0 0 var(--ongoing) }
+  .kpi.on    .v{color:var(--ongoing)}
+  .kpi.dn    { box-shadow: inset 3px 0 0 var(--done) }
+  .kpi.dn    .v{color:var(--done)}
+  .kpi.tot   { box-shadow: inset 3px 0 0 var(--text-2) }
+  .kpi.tot   .v{color:var(--text)}
+
+  /* legend */
+  .legend{padding:10px 16px 16px;display:flex;flex-direction:column;gap:9px}
+  .legend .row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px}
+  .legend .row .lf{display:flex;align-items:center;gap:10px;color:var(--text-2)}
+  .legend .row .swatch{width:12px;height:12px;border-radius:4px}
+  .legend .row .ct{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:11px}
+
+  /* horizon (load gauge) */
+  .horizon{padding:10px 16px 18px;flex:1;display:flex;flex-direction:column;gap:10px;min-height:0}
+  .horizon .bars{display:flex;align-items:flex-end;gap:6px;height:100%;min-height:0;flex:1;padding-bottom:18px;position:relative}
+  .horizon .bars::after{
+    content:"";position:absolute;left:0;right:0;bottom:18px;border-top:1px dashed var(--line-soft)
+  }
+  .horizon .bar{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:2px;position:relative}
+  .horizon .bar .stack{display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%}
+  .horizon .bar .seg{border-radius:3px;min-height:2px}
+  .horizon .bar .seg.up{background:var(--upcoming)}
+  .horizon .bar .seg.on{background:var(--ongoing)}
+  .horizon .bar .seg.dn{background:var(--done);opacity:.55}
+  .horizon .bar .lab{
+    position:absolute;bottom:0;left:0;right:0;text-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;
+  }
+  .horizon .bar.now .lab{color:var(--now)}
+  .horizon .bar.now::before{
+    content:"";position:absolute;left:50%;top:-4px;bottom:18px;width:1px;
+    background:linear-gradient(180deg, var(--now), transparent);
+    transform:translateX(-50%);
+  }
+
+  /* ───── Scope (radar) ───── */
+  .scope{
+    grid-area:scope;
+    background:
+      radial-gradient(circle at 50% 55%, oklch(0.24 0.03 270 / .6), transparent 70%),
+      linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line-soft);
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+    min-width:0;min-height:0;
+  }
+  .scope-h{
+    position:absolute;top:0;left:0;right:0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;
+    z-index:5;pointer-events:none;
+  }
+  .scope-h .left-l{display:flex;flex-direction:column;gap:2px}
+  .scope-h .ttl{font-size:13px;font-weight:600;letter-spacing:.01em}
+  .scope-h .sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
+  .scope-h .right-l{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+  .scope-h .right-l .big{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-2)}
+  .scope-h .right-l .small{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+
+  .scope svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* corner ticks */
+  .scope .corner{position:absolute;width:18px;height:18px;border:1px solid var(--line);opacity:.55;pointer-events:none}
+  .scope .corner.tl{top:10px;left:10px;border-right:none;border-bottom:none}
+  .scope .corner.tr{top:10px;right:10px;border-left:none;border-bottom:none}
+  .scope .corner.bl{bottom:10px;left:10px;border-right:none;border-top:none}
+  .scope .corner.br{bottom:10px;right:10px;border-left:none;border-top:none}
+
+  .scope-foot{
+    position:absolute;left:0;right:0;bottom:0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 18px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+    letter-spacing:.14em;text-transform:uppercase;pointer-events:none;
+    z-index:5;
+  }
+  .scope-foot .live{display:inline-flex;align-items:center;gap:6px;color:var(--text-2)}
+  .scope-foot .live .pulse{
+    width:7px;height:7px;border-radius:50%;background:oklch(0.78 0.18 145);
+    box-shadow:0 0 0 0 oklch(0.78 0.18 145 / .7);
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 oklch(0.78 0.18 145 / .7)}
+    70%{box-shadow:0 0 0 10px oklch(0.78 0.18 145 / 0)}
+    100%{box-shadow:0 0 0 0 oklch(0.78 0.18 145 / 0)}
+  }
+
+  /* sweep beam */
+  .sweep{
+    position:absolute;left:50%;top:50%;
+    width:50%;height:50%;
+    transform-origin:0 0;
+    pointer-events:none;
+    background:conic-gradient(from 0deg, oklch(0.74 0.18 300 / .25) 0deg, transparent 35deg);
+    -webkit-mask:radial-gradient(circle at 0 0, black 0, black 100%, transparent 101%);
+    mask:radial-gradient(circle at 0 0, black 0, black 100%, transparent 101%);
+    border-top-right-radius:100%;
+    animation:sweep 8s linear infinite;
+  }
+  @keyframes sweep{ from{transform:rotate(-90deg)} to{transform:rotate(270deg)} }
+
+  /* blips */
+  /* ── Blip : tooltip nom au survol ── */
+  .blip {
+    position:absolute;width:14px;height:14px;border-radius:50%;
+    transform:translate(-50%,-50%);
+    cursor:pointer;
+    box-shadow:0 0 0 0 currentColor;
+    transition: transform .18s, box-shadow .18s;
+    z-index:3;
+  }
+  .blip:hover { transform:translate(-50%,-50%) scale(1.5); z-index:10; }
+
+  /* Label nom de la réforme au survol */
+  .blip-hover-label {
+    position:absolute;
+    transform: translate(-50%, -180%);
+    background: rgba(26,26,46,.92);
+    color: #f5f5f5;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity .3s ease;
+    max-width: 220px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+  .blip-hover-label.visible { opacity: 1; }
+
+  .blip::before{
+    content:"";position:absolute;inset:-6px;border-radius:50%;
+    border:1px solid currentColor;opacity:.35;
+  }
+  .blip::after{
+    content:"";position:absolute;inset:3px;border-radius:50%;background:currentColor;
+  }
+  .blip.up{color:var(--upcoming)}
+  .blip.on{color:var(--ongoing)}
+  .blip.dn{color:var(--done);opacity:.55}
+  .blip:hover, .blip.active{ transform:translate(-50%,-50%) scale(1.18); box-shadow:0 0 0 6px currentColor /*via filter*/; filter:drop-shadow(0 0 14px currentColor) }
+  .blip .ring-anim{
+    position:absolute;inset:-6px;border-radius:50%;border:1px solid currentColor;opacity:.5;
+    animation:ringPulse 2.4s ease-out infinite;
+  }
+  .blip.up .ring-anim{animation-delay:0s}
+  .blip.on .ring-anim{animation-duration:1.6s}
+  @keyframes ringPulse{
+    0%{transform:scale(.8);opacity:.55}
+    100%{transform:scale(2.4);opacity:0}
+  }
+
+  .blip-lbl{
+    position:absolute;transform:translate(-50%, calc(-100% - 14px));
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--text-2);background:oklch(0.18 0.02 260 / .85);
+    border:1px solid var(--line-soft);border-radius:6px;
+    padding:3px 7px;white-space:nowrap;pointer-events:none;
+    letter-spacing:.04em;
+    opacity:0;transition:opacity .15s;
+    z-index:4;
+  }
+  .blip:hover + .blip-lbl, .blip.active + .blip-lbl{opacity:1}
+
+  /* axis labels */
+  .axis-lab{
+    position:absolute;font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--muted);letter-spacing:.14em;text-transform:uppercase;
+    transform:translate(-50%,-50%);pointer-events:none;
+    z-index:2;
+  }
+  .ring-lab{
+    position:absolute;font-family:'JetBrains Mono',monospace;font-size:9.5px;
+    color:var(--dim);letter-spacing:.1em;
+    background:var(--bg-2);padding:1px 6px;border-radius:4px;
+    transform:translate(-50%,-50%);pointer-events:none;z-index:2;
+  }
+  .month-lab{
+    position:absolute;transform:translate(-50%,-50%);
+    pointer-events:none;z-index:2;text-align:center;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .month-lab b{
+    display:block;font-size:11px;font-weight:600;
+    color:var(--text-2);letter-spacing:.14em;
+  }
+  .month-lab span{
+    display:block;font-size:9px;color:var(--dim);letter-spacing:.12em;margin-top:1px;
+  }
+  .month-lab.major b{ color:var(--text) }
+  .month-lab.now b{ color:var(--now) }
+  .month-lab.now::after{
+    content:"";display:block;margin:3px auto 0;
+    width:6px;height:6px;border-radius:50%;background:var(--now);
+    box-shadow:0 0 10px var(--now);
+  }
+
+  .blip-tail{
+    position:absolute;height:1px;
+    transform-origin:0 50%;
+    pointer-events:none;z-index:1;
+    opacity:.18;
+  }
+  .blip-tail.up{ background:linear-gradient(90deg, transparent, var(--upcoming)) }
+  .blip-tail.on{ background:linear-gradient(90deg, transparent, var(--ongoing)) }
+  .blip-tail.dn{ background:linear-gradient(90deg, transparent, var(--done)); opacity:.10 }
+
+  /* center NOW marker */
+  .now-marker{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:46px;height:46px;border-radius:50%;
+    background:radial-gradient(circle, oklch(0.92 0.14 95 / .25), transparent 70%);
+    z-index:3;pointer-events:none;
+  }
+  .now-marker .dot{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:10px;height:10px;border-radius:50%;background:var(--now);
+    box-shadow: 0 0 18px var(--now), 0 0 0 4px oklch(0.92 0.14 95 / .15);
+  }
+  .now-marker .lbl{
+    position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--now);
+    letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;font-weight:600;
+  }
+
+  /* ───── Right inspector ───── */
+  .right{grid-area:right;display:flex;flex-direction:column;gap:14px;min-height:0}
+  .insp{
+    flex:1;min-height:0;
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line-soft);
+    border-radius:14px;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    position:relative;
+  }
+  .insp::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg, var(--upcoming), var(--ongoing), var(--done));
+    opacity:.7;
+  }
+  .insp-h{padding:18px 20px 8px;display:flex;align-items:center;justify-content:space-between}
+  .insp-h .ttl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .insp-h .id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+  .insp-body{padding:6px 20px 16px;flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;min-height:0}
+
+  .insp .status{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:5px 10px;border-radius:999px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    background:oklch(0.2 0.02 260);border:1px solid var(--line-soft);
+  }
+  .insp .status .d{width:7px;height:7px;border-radius:50%}
+  .insp .status.up .d{background:var(--upcoming)} .insp .status.up{color:var(--upcoming)}
+  .insp .status.on .d{background:var(--ongoing)}  .insp .status.on{color:var(--ongoing)}
+  .insp .status.dn .d{background:var(--done)}     .insp .status.dn{color:var(--done)}
+
+  .insp h2{margin:0;font-size:18px;font-weight:600;line-height:1.25;letter-spacing:-.005em;text-wrap:pretty}
+
+  .insp .meta{display:flex;flex-wrap:wrap;gap:12px 18px;font-size:12px;color:var(--text-2)}
+  .insp .meta .k{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:3px}
+  .insp .meta .v{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text)}
+
+  .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tags .t{
+    font-size:11px;padding:3px 9px;border-radius:6px;
+    background:oklch(0.2 0.02 260);border:1px solid var(--line-soft);color:var(--text-2);
+    font-family:'JetBrains Mono',monospace;letter-spacing:.02em;
+  }
+
+  .gauge{
+    display:flex;align-items:center;gap:14px;
+    padding:12px 14px;border-radius:10px;
+    background:oklch(0.2 0.02 260);border:1px solid var(--line-soft);
+  }
+  .gauge .ring{width:56px;height:56px;flex-shrink:0;position:relative}
+  .gauge .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .gauge .ring .v{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500}
+  .gauge .info .lab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+  .gauge .info .desc{font-size:12px;color:var(--text-2);line-height:1.45}
+
+  .actions{display:flex;gap:8px;margin-top:auto;padding:0 0 4px}
+  .btn{
+    flex:1;height:38px;border-radius:9px;border:1px solid var(--line-soft);
+    background:var(--panel-2);color:var(--text);font-size:12px;font-weight:500;
+    cursor:pointer;transition:.18s;letter-spacing:.04em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .btn:hover{border-color:var(--line)}
+  .btn.primary{
+    background:linear-gradient(180deg, oklch(0.62 0.2 295), oklch(0.48 0.22 290));
+    border-color:transparent;color:#fff;
+  }
+
+  /* ───── Bottom strip (approach vector) ───── */
+  .strip{
+    grid-area:strip;
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line-soft);
+    border-radius:14px;
+    padding:14px 18px;
+    display:flex;flex-direction:column;gap:10px;
+    min-height:0;
+  }
+  .strip-h{display:flex;align-items:center;justify-content:space-between}
+  .strip-h .ttl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .strip-h .right{display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em}
+
+  .lane{
+    flex:1;position:relative;
+    background:
+      linear-gradient(180deg, transparent, oklch(0.16 0.02 260 / .4)),
+      var(--bg-2);
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .lane::before{
+    content:"";position:absolute;top:50%;left:0;right:0;height:1px;
+    background:repeating-linear-gradient(90deg, var(--line-soft) 0 6px, transparent 6px 12px);
+  }
+  .lane .month{
+    position:absolute;top:0;bottom:0;
+    border-right:1px dashed var(--line-soft);
+  }
+  .lane .month .ml{
+    position:absolute;top:6px;left:8px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--dim);
+    letter-spacing:.12em;text-transform:uppercase;
+  }
+  .lane .now-line{
+    position:absolute;top:0;bottom:0;width:2px;background:var(--now);
+    box-shadow:0 0 18px var(--now);
+  }
+  .lane .now-line::after{
+    content:"NOW";position:absolute;top:6px;left:8px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--now);
+    letter-spacing:.18em;font-weight:600;
+  }
+  .lane .item{
+    position:absolute;top:50%;transform:translate(-50%,-50%);
+    height:28px;padding:0 10px;border-radius:8px;
+    background:var(--panel-2);border:1px solid var(--line-soft);
+    display:flex;align-items:center;gap:8px;
+    cursor:pointer;transition:.18s;
+    font-size:11px;color:var(--text-2);max-width:170px;
+  }
+  .lane .item:hover, .lane .item.active{transform:translate(-50%,-50%) translateY(-2px);border-color:var(--line);color:var(--text);box-shadow:0 6px 18px oklch(0 0 0 / .3)}
+  .lane .item .d{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .lane .item.up .d{background:var(--upcoming)}
+  .lane .item.on .d{background:var(--ongoing)}
+  .lane .item.dn .d{background:var(--done)}
+  .lane .item .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Inter';font-weight:500}
+  .lane .item .when{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-left:4px}
+
+  /* scrollbars */
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+</style>
+</head>
+<body>
+
+<div class="cockpit">
+
+  <!-- HEAD -->
+  <header class="head">
+    <div class="brand">
+      <a id="linkPortail" href="../index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+        <img src="../assets/logo-koesio-data-solutions.png" alt="KDS" style="height:32px;width:auto;">
+      </a>
+      <div style="height:28px;width:1px;background:var(--line-soft);margin:0 4px;"></div>
+      <div>
+        <h1>Cockpit des réformes</h1>
+        <small>PaieKipédia · pilotage réglementaire</small>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="crumbs"><a id="linkPortailCrumb" href="../index.html" style="color:var(--muted);text-decoration:none;">PORTAIL</a> <span style="color:var(--dim);margin:0 8px">›</span> <b>RÉFORMES</b></div>
+    <div class="filler"></div>
+    <div class="pill-row">
+      <button class="pill" id="filter-all"><span class="dot" style="color:var(--text-2)"></span>TOUS</button>
+      <button class="pill" id="filter-up"><span class="dot" style="color:var(--upcoming)"></span>À VENIR</button>
+      <button class="pill" id="filter-on"><span class="dot" style="color:var(--ongoing)"></span>EN COURS</button>
+      <button class="pill" id="filter-dn"><span class="dot" style="color:var(--done)"></span>TRAITÉ</button>
+
+    </div>
+  </header>
+
+  <!-- LEFT: KPIs + legend + horizon -->
+  <aside class="left">
+
+    <section class="panel">
+      <div class="panel-h">
+        <span class="lbl">État du suivi</span>
+        <span class="tag">T+0</span>
+      </div>
+      <div class="kpis">
+        <div class="kpi up"><div class="v">9</div><div class="l">À venir</div></div>
+        <div class="kpi on"><div class="v">2</div><div class="l">En cours</div></div>
+        <div class="kpi dn"><div class="v">2</div><div class="l">Traité</div></div>
+        <div class="kpi tot"><div class="v">13</div><div class="l">Total</div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-h">
+        <span class="lbl">Familles thématiques</span>
+        <span class="tag">8 secteurs</span>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div class="panel-h">
+        <span class="lbl">Charge sur 12 mois</span>
+        <span class="tag">réformes / mois</span>
+      </div>
+      <div class="horizon">
+        <div class="bars" id="horizon"></div>
+      </div>
+    </section>
+
+  </aside>
+
+  <!-- SCOPE -->
+  <main class="scope" id="scope">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+
+    <header class="scope-h">
+      <div class="left-l">
+        <div class="ttl">Cadran temporel · Mai 2026 → Mai 2027</div>
+        <div class="sub">Angle = échéance · distance = impact · couleur = statut</div>
+      </div>
+      <div class="right-l">
+        <div class="big">N 48°51' E 2°21'</div>
+        <div class="small">Scope · 360° · Refresh 8s</div>
+      </div>
+    </header>
+
+    <svg id="grid"></svg>
+
+    <div class="sweep"></div>
+    <div class="now-marker">
+      <div class="dot"></div>
+      <div class="lbl">Maintenant</div>
+    </div>
+    <div id="blips"></div>
+    <div id="axis-labels"></div>
+
+    <footer class="scope-foot">
+      <span class="live"><span class="pulse"></span>SYSTÈME EN VEILLE ACTIVE</span>
+      <span>Sources · BOFiP · Légifrance · DSN-info · INSEE</span>
+      <span>v 4.2 · Sync 08 mai 2026</span>
+    </footer>
+  </main>
+
+  <!-- RIGHT: inspector -->
+  <aside class="right">
+    <section class="insp" id="inspector">
+      <div class="insp-h">
+        <span class="ttl">Inspecteur · Réforme</span>
+        <span class="id" id="insp-id">— —</span>
+      </div>
+      <div class="insp-body" id="insp-body">
+        <!-- filled by JS -->
+      </div>
+    </section>
+  </aside>
+
+  <!-- BOTTOM: approach vector strip -->
+  <section class="strip">
+    <div class="strip-h">
+      <span class="ttl">Vecteur d'approche · 12 prochaines échéances</span>
+      <div class="right">
+        <span>← PASSÉ</span>
+        <span>FUTUR →</span>
+      </div>
+    </div>
+    <div class="lane" id="lane"></div>
+  </section>
+
+</div>
+
+
+<script src="../assets/config.js"></script>
+<script src="data.js"></script>
+<script>
+
+/* ═════════ Data ═════════ */
+const NOW = new Date(2026, 4, 8); // 8 mai 2026
+
+const FAMILIES = [
+  { id:'fisc', label:'Fiscal / PAS',        hue:300, ang: -75 },
+  { id:'remu', label:'Rémunération · SMIC', hue:185, ang: -35 },
+  { id:'aen',  label:'Avantages en nature', hue:45,  ang:  -5 },
+  { id:'retr', label:'Retraite',            hue:150, ang:  30 },
+  { id:'dsn',  label:'DSN / Déclaratif',    hue:265, ang:  65 },
+  { id:'soc',  label:'Social / Égalité',    hue:355, ang: 100 },
+  { id:'sect', label:'Sectoriel',           hue:215, ang: 140 },
+  { id:'ue',   label:'Directive UE',        hue:90,  ang: 180 },
+];
+
+// ── Conversion REFORMES_DATA (data.js) → format cockpit ────────────────────
+const STATUS_MAP = { traite:'dn', cours:'on', avenir:'up', archive:'dn' };
+const FAM_RULES = [
+  [['PAS','BOFiP','CSG','IR','fiscal'], 'fisc'],
+  [['SMIC','RGDU','IPC','Rémunération','Revalorisation','Forfait'], 'remu'],
+  [['AEN','Avantages en nature','Véhicule'], 'aen'],
+  [['AGIRC','ARRCO','Retraite','IRCANTEC'], 'retr'],
+  [['DSN','NAF','DPAE','SPST','Déclaratif','P27V01'], 'dsn'],
+  [['Congés','Égalité','Index','Jurisprudence','Social'], 'soc'],
+  [['Formation','CPF','OPCO','Sectoriel'], 'sect'],
+  [['Directive','UE','européenne'], 'ue'],
+];
+
+function inferFam(tags) {
+  for (const t of (tags||[])) {
+    for (const [keys, fam] of FAM_RULES) {
+      if (keys.some(k => t.includes(k))) return fam;
+    }
+  }
+  return 'fisc';
+}
+
+function inferImpact(impacts) {
+  if (!impacts) return 50;
+  const needed = Object.values(impacts).filter(i => i.action === 'needed').length;
+  return Math.min(95, 30 + needed * 22);
+}
+
+const REFORMS = (window.REFORMES_DATA || []).map(r => ({
+  id:     r.id,
+  title:  r.titre,
+  sub:    r.source && r.source.texte ? r.source.texte.slice(0, 80) : '',
+  date:   r.dateEffet ? new Date(r.dateEffet) : new Date(),
+  status: STATUS_MAP[r.statut] || 'up',
+  fam:    inferFam(r.tags),
+  tags:   r.tags || [],
+  impact: inferImpact(r.impacts),
+  source: r.source && r.source.texte ? r.source.texte : '',
+  sourceUrl: r.source && r.source.url ? r.source.url : null,
+  _raw:   r,
+}));
+
+/* helpers */
+const monthsBetween = (a,b) => (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()) + (b.getDate()-a.getDate())/30;
+const fmtDate = d => d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'});
+const fmtMonth = d => d.toLocaleDateString('fr-FR', {month:'short', year:'2-digit'}).replace('.','').toUpperCase();
+
+const famById = id => FAMILIES.find(f=>f.id===id);
+const statusLabel = {up:'À venir', on:'En cours', dn:'Traité'};
+
+/* ═════════ Legend ═════════ */
+(() => {
+  const root = document.getElementById('legend');
+  const counts = {};
+  REFORMS.forEach(r => counts[r.fam]=(counts[r.fam]||0)+1);
+  FAMILIES.forEach(f => {
+    const r = document.createElement('div'); r.className='row';
+    r.innerHTML = `
+      <div class="lf"><span class="swatch" style="background:oklch(0.66 0.16 ${f.hue})"></span>${f.label}</div>
+      <span class="ct">${counts[f.id]||0}</span>`;
+    root.appendChild(r);
+  });
+})();
+
+/* ═════════ Horizon (12 months bars) ═════════ */
+(() => {
+  const root = document.getElementById('horizon');
+  const months = [];
+  for (let i=-1;i<11;i++){
+    const d = new Date(NOW.getFullYear(), NOW.getMonth()+i, 1);
+    months.push(d);
+  }
+  const max = 5;
+  months.forEach((m,i) => {
+    const same = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth();
+    const bucket = REFORMS.filter(r => same(r.date, m));
+    const up = bucket.filter(r=>r.status==='up').length;
+    const on = bucket.filter(r=>r.status==='on').length;
+    const dn = bucket.filter(r=>r.status==='dn').length;
+
+    const bar = document.createElement('div');
+    bar.className = 'bar' + (same(m, NOW) ? ' now':'');
+    const stack = document.createElement('div'); stack.className='stack';
+    [['dn',dn],['on',on],['up',up]].forEach(([k,v])=>{
+      if(!v) return;
+      const seg = document.createElement('div'); seg.className='seg '+k;
+      seg.style.height = (v/max*100)+'%';
+      stack.appendChild(seg);
+    });
+    bar.appendChild(stack);
+    const lab = document.createElement('div'); lab.className='lab';
+    lab.textContent = m.toLocaleDateString('fr-FR',{month:'short'}).slice(0,3).toUpperCase();
+    bar.appendChild(lab);
+    root.appendChild(bar);
+  });
+})();
+
+/* ═════════ Scope: SVG grid ═════════ */
+/* Polar helpers — angle measured clockwise from 12 o'clock (top).
+   monthOffset 0..12 → angle 0..360°  */
+function polar(cx, cy, r, monthOffset){
+  const deg = (monthOffset / 12) * 360 - 90; // -90 so 0 = top
+  const a = deg * Math.PI/180;
+  return { x: cx + Math.cos(a)*r, y: cy + Math.sin(a)*r, deg };
+}
+
+function drawGrid(){
+  const scope = document.getElementById('scope');
+  const w = scope.clientWidth, h = scope.clientHeight;
+  const cx = w/2, cy = h/2;
+  const R = Math.min(w,h)/2 - 44;
+  const svg = document.getElementById('grid');
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  let s = '';
+
+  // impact rings (25 / 50 / 75 / 100)
+  const rings = [
+    {p:25,  r:R*0.25, dash:'2 4', lab:'IMPACT 25'},
+    {p:50,  r:R*0.50, dash:'2 4', lab:'IMPACT 50'},
+    {p:75,  r:R*0.75, dash:'2 4', lab:'IMPACT 75'},
+    {p:100, r:R*1.00, dash:'0',   lab:'IMPACT 100'},
+  ];
+  rings.forEach(rg => {
+    s += `<circle cx="${cx}" cy="${cy}" r="${rg.r}" fill="none" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="${rg.dash}" opacity=".7"/>`;
+  });
+  // outer accent ring
+  s += `<circle cx="${cx}" cy="${cy}" r="${R+6}" fill="none" stroke="var(--line)" stroke-width="1" opacity=".4"/>`;
+
+  // 12 month spokes + minor week ticks
+  for (let i=0;i<12;i++){
+    const p1 = polar(cx, cy, R*0.04, i);
+    const p2 = polar(cx, cy, R, i);
+    const major = (i % 3 === 0);
+    s += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="var(--line-soft)" stroke-width="1" opacity="${major?'.55':'.28'}"/>`;
+    // week ticks (4 per month) on outer ring
+    for (let w=1; w<4; w++){
+      const tIn  = polar(cx, cy, R-4, i + w/4);
+      const tOut = polar(cx, cy, R+2, i + w/4);
+      s += `<line x1="${tIn.x}" y1="${tIn.y}" x2="${tOut.x}" y2="${tOut.y}" stroke="var(--line-soft)" stroke-width="1" opacity=".35"/>`;
+    }
+  }
+
+  // Quadrant axes (T+0, T+3, T+6, T+9)
+  const axes = [0, 3, 6, 9];
+  axes.forEach(m => {
+    const p2 = polar(cx, cy, R+10, m);
+    s += `<line x1="${cx}" y1="${cy}" x2="${p2.x}" y2="${p2.y}" stroke="var(--line-soft)" stroke-width="1" opacity=".35"/>`;
+  });
+
+  // 12 o'clock NOW ray (highlighted)
+  const nowRay = polar(cx, cy, R+12, 0);
+  s += `<line x1="${cx}" y1="${cy}" x2="${nowRay.x}" y2="${nowRay.y}" stroke="var(--now)" stroke-width="1.5" opacity=".55"/>`;
+
+  svg.innerHTML = s;
+
+  // ── Ligne radar tournante ─────────────────────────────────────────────────
+  // Élément SVG animé superposé (rotation CSS, origine = centre du cercle)
+  // Supprimer l'ancien sweep SVG et le recréer avec les bonnes dimensions
+  const oldSweep = document.getElementById('radar-sweep-svg');
+  if (oldSweep) oldSweep.remove();
+  {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const sweepSvg = document.createElementNS(svgNS, 'svg');
+    sweepSvg.id = 'radar-sweep-svg';
+    sweepSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    sweepSvg.style.cssText = `position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible;`;
+
+    // SVG centré sur (cx,cy) via translate — groupe à l'origine (0,0)
+    // → animateTransform rotate fonctionne parfaitement autour de (0,0)
+    sweepSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+    const g = document.createElementNS(svgNS, 'g');
+    g.id = 'radar-sweep';
+    // Translate le groupe au centre du radar
+    g.setAttribute('transform', `translate(${cx},${cy})`);
+
+    // Ligne principale vers 12h
+    const sweepLine = document.createElementNS(svgNS, 'line');
+    sweepLine.id = 'radar-line';
+    sweepLine.setAttribute('x1', '0');
+    sweepLine.setAttribute('y1', '0');
+    sweepLine.setAttribute('x2', '0');
+    sweepLine.setAttribute('y2', -(R + 12));
+    sweepLine.setAttribute('stroke', 'var(--now)');
+    sweepLine.setAttribute('stroke-width', '1.5');
+    sweepLine.setAttribute('opacity', '0.9');
+    sweepLine.setAttribute('stroke-linecap', 'round');
+
+    // Point brillant à l'extrémité
+    const sweepTip = document.createElementNS(svgNS, 'circle');
+    sweepTip.setAttribute('cx', '0');
+    sweepTip.setAttribute('cy', -(R + 12));
+    sweepTip.setAttribute('r', '3');
+    sweepTip.setAttribute('fill', 'var(--now)');
+    sweepTip.setAttribute('opacity', '1');
+
+    // animateTransform SVG natif — rotation autour de (0,0) = centre du groupe
+    const anim = document.createElementNS(svgNS, 'animateTransform');
+    anim.setAttribute('attributeName', 'transform');
+    anim.setAttribute('attributeType', 'XML');
+    anim.setAttribute('type', 'rotate');
+    anim.setAttribute('from', `0`);
+    anim.setAttribute('to', `360`);
+    anim.setAttribute('dur', '8s');
+    anim.setAttribute('repeatCount', 'indefinite');
+    anim.setAttribute('additive', 'sum');  // s'ajoute au translate initial
+    g.appendChild(sweepLine);
+    g.appendChild(sweepTip);
+    g.appendChild(anim);
+    sweepSvg.appendChild(g);
+    document.getElementById('scope').appendChild(sweepSvg);
+  }
+
+  // ring labels (placed at 4:30 position so they don't sit on a spoke)
+  const axisRoot = document.getElementById('axis-labels');
+  axisRoot.innerHTML='';
+  rings.forEach(rg => {
+    const p = polar(cx, cy, rg.r, 4.5);
+    const el = document.createElement('div');
+    el.className='ring-lab';
+    el.style.left = p.x + 'px';
+    el.style.top = p.y + 'px';
+    el.textContent = rg.lab;
+    axisRoot.appendChild(el);
+  });
+
+  // 12 month labels around the dial
+  for (let i=0;i<12;i++){
+    const d = new Date(NOW.getFullYear(), NOW.getMonth()+i, 1);
+    const p = polar(cx, cy, R+26, i);
+    const el = document.createElement('div');
+    el.className = 'month-lab' + (i===0 ? ' now' : '') + ((i%3===0)?' major':'');
+    el.style.left = p.x + 'px';
+    el.style.top  = p.y + 'px';
+    el.innerHTML = `<b>${d.toLocaleDateString('fr-FR',{month:'short'}).replace('.','').toUpperCase()}</b><span>${String(d.getFullYear()).slice(-2)}</span>`;
+    axisRoot.appendChild(el);
+  }
+
+  // place blips
+  placeBlips(cx, cy, R);
+}
+
+let activeId = null;
+
+function placeBlips(cx, cy, R){
+  const root = document.getElementById('blips');
+  root.innerHTML='';
+
+  // sort by month so radial connectors layer cleanly
+  const placed = REFORMS
+    .map(r => ({ r, m: monthsBetween(NOW, r.date) }))
+    .filter(x => x.m >= -0.6 && x.m <= 12);
+
+  // de-cluster: nudge angle a bit for items sharing the same date
+  const byDate = {};
+  placed.forEach(p => {
+    const k = p.r.date.toISOString().slice(0,10);
+    (byDate[k] = byDate[k] || []).push(p);
+  });
+  Object.values(byDate).forEach(group => {
+    if (group.length <= 1) return;
+    group.forEach((p, i) => {
+      // spread across ~1.6 weeks of angle
+      p.angleNudge = (i - (group.length-1)/2) * (1.6/4);
+    });
+  });
+
+  placed.forEach(({ r, m, angleNudge=0 }) => {
+    const monthOffset = Math.max(0, m) + angleNudge;
+    const radius = (Math.max(8, Math.min(100, r.impact)) / 100) * R;
+    const { x, y } = polar(cx, cy, radius, monthOffset);
+
+    // radial connector from center for visual lead-in
+    const tail = document.createElement('div');
+    tail.className = 'blip-tail ' + r.status;
+    const len = radius;
+    const angDeg = (monthOffset/12)*360 - 90;
+    tail.style.left = cx + 'px';
+    tail.style.top  = cy + 'px';
+    tail.style.width = len + 'px';
+    tail.style.transform = `rotate(${angDeg}deg)`;
+    root.appendChild(tail);
+
+    const dot = document.createElement('div');
+    dot.className = 'blip ' + r.status;
+    dot.style.left = x + 'px';
+    dot.style.top  = y + 'px';
+    if (r.status === 'on') dot.innerHTML = '<span class="ring-anim"></span>';
+    dot.dataset.id = r.id;
+    dot.title = r.title;
+    const mOff = monthsBetween(NOW, r.date);
+    dot.dataset.angle = String(((mOff / 12) * 360 + 360) % 360);
+    dot.addEventListener('click', () => selectReform(r.id));
+    if (r.id === activeId) dot.classList.add('active');
+
+    // Label nom au survol avec fondu
+    const lbl = document.createElement('div');
+    lbl.className = 'blip-hover-label';
+    lbl.textContent = r.title;
+    dot.appendChild(lbl);
+
+    let lbl_timer = null;
+    dot.addEventListener('mouseenter', () => {
+      lbl.classList.add('visible');
+      clearTimeout(lbl_timer);
+      lbl_timer = setTimeout(() => { lbl.classList.remove('visible'); }, 2000);
+    });
+    dot.addEventListener('mouseleave', () => {
+      clearTimeout(lbl_timer);
+      lbl.classList.remove('visible');
+    });
+
+    root.appendChild(dot);
+
+    const blipLbl = document.createElement('div');
+    blipLbl.className='blip-lbl';
+    blipLbl.style.left = x + 'px';
+    blipLbl.style.top  = y + 'px';
+    blipLbl.textContent = r.title;
+    root.appendChild(blipLbl);
+  });
+}
+
+window.addEventListener('resize', drawGrid);
+
+/* ═════════ Inspector ═════════ */
+function selectReform(id){
+  activeId = id;
+  document.querySelectorAll('.blip').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  document.querySelectorAll('.lane .item').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  const r = REFORMS.find(x=>x.id===id);
+  const fam = famById(r.fam);
+  const m = monthsBetween(NOW, r.date);
+  const days = Math.round(m * 30);
+  const proximity = Math.max(0, Math.min(100, 100 - (m/12)*100));
+
+  document.getElementById('insp-id').textContent = r.id;
+  const body = document.getElementById('insp-body');
+  body.innerHTML = `
+    <div class="status ${r.status}"><span class="d"></span>${statusLabel[r.status]}</div>
+    <h2>${r.title}</h2>
+    <div style="font-size:13px;color:var(--text-2);line-height:1.5;text-wrap:pretty">${r.sub}</div>
+
+    <div class="meta">
+      <div><span class="k">Date d'effet</span><span class="v">${fmtDate(r.date)}</span></div>
+      <div><span class="k">Échéance</span><span class="v">${days>=0?`T+${days}j`:`T${days}j`}</span></div>
+      <div><span class="k">Famille</span><span class="v" style="color:oklch(0.78 0.16 ${fam.hue})">${fam.label}</span></div>
+      <div><span class="k">Source</span><span class="v" style="font-size:11px">${r.source}</span></div>
+    </div>
+
+    <div class="tags">${r.tags.map(t=>`<span class="t">${t}</span>`).join('')}</div>
+
+    <div class="gauge">
+      ${donutSvg(r.impact, statusColor(r.status))}
+      <div class="info">
+        <div class="lab">Indice d'impact</div>
+        <div class="desc">${impactDesc(r.impact)}</div>
+      </div>
+    </div>
+    <div class="gauge">
+      ${donutSvg(proximity, 'var(--now)')}
+      <div class="info">
+        <div class="lab">Proximité</div>
+        <div class="desc">${proximityDesc(m)}</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn">Documenter</button>
+      <button class="btn primary">Lancer campagne</button>
+    </div>
+    `;
+
+  // Enrichissement impacts logiciels depuis data.js
+  if (r._raw && r._raw.impacts) {
+    const icons = { needed:'⚠️', ok:'✅', na:'—' };
+    let html = '<div style="margin-top:14px;border-top:1px solid var(--line-soft);padding-top:12px;">'
+      + '<div style="font-size:10px;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:600;">IMPACTS LOGICIELS</div>';
+    ['sage','silae','lucca'].forEach(l => {
+      const imp = r._raw.impacts[l];
+      if (!imp) return;
+      const icons2 = { needed:'⚠️', ok:'✅', na:'—' };
+      html += '<div style="margin-bottom:10px;">'
+        + '<div style="font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:3px;">'
+        + icons2[imp.action] + ' ' + l.charAt(0).toUpperCase() + l.slice(1) + '</div>'
+        + '<div style="font-size:11px;color:var(--muted);line-height:1.55;">' + imp.analyse + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    if (r._raw.campagne && r._raw.campagne.date) {
+      html += '<div style="margin-top:10px;border-top:1px solid var(--line-soft);padding-top:10px;">'
+        + '<div style="font-size:10px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;font-weight:600;">CAMPAGNE KDS</div>'
+        + '<div style="font-size:11px;color:var(--text-2);">Date : ' + r._raw.campagne.date + '</div>'
+        + (r._raw.campagne.noteClient ? '<div style="font-size:11px;margin-top:4px;"><a href="'+r._raw.campagne.noteClient+'" target="_blank" rel="noopener" style="color:var(--upcoming);">Note client →</a></div>' : '')
+        + '</div>';
+    }
+    body.innerHTML += html;
+  }
+}
+
+function statusColor(s){ return s==='up'?'var(--upcoming)':s==='on'?'var(--ongoing)':'var(--done)' }
+function impactDesc(i){
+  if(i>=80) return 'Impact opérationnel élevé · campagne dédiée recommandée';
+  if(i>=55) return 'Impact significatif sur paie & déclaratif';
+  if(i>=35) return 'Impact ciblé sur certains profils';
+  return 'Impact faible · veille passive suffisante';
+}
+function proximityDesc(m){
+  if(m<0) return 'Échéance dépassée · vérifier conformité';
+  if(m<1) return 'Échéance imminente · moins d\'un mois';
+  if(m<3) return 'Échéance courte · préparation à enclencher';
+  if(m<6) return 'Échéance moyen-terme · cadrage en cours';
+  return 'Échéance lointaine · veille active';
+}
+function donutSvg(pct, color){
+  const r=22, c=2*Math.PI*r;
+  const off = c - (pct/100)*c;
+  return `
+    <div class="ring">
+      <svg viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="4"/>
+        <circle cx="28" cy="28" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+          stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round"/>
+      </svg>
+      <div class="v">${Math.round(pct)}</div>
+    </div>`;
+}
+
+/* ═════════ Bottom strip — approach lane ═════════ */
+(() => {
+  const lane = document.getElementById('lane');
+  // window: 1 month before NOW → 12 months ahead
+  const start = new Date(NOW.getFullYear(), NOW.getMonth()-1, 1);
+  const end   = new Date(NOW.getFullYear(), NOW.getMonth()+12, 1);
+  const span  = end - start;
+  const pct = d => ((d - start)/span) * 100;
+
+  // month dividers
+  for (let i=0;i<14;i++){
+    const m = new Date(start.getFullYear(), start.getMonth()+i, 1);
+    const div = document.createElement('div');
+    div.className = 'month';
+    div.style.left = pct(m) + '%';
+    div.style.width = (100/14) + '%';
+    div.innerHTML = `<span class="ml">${fmtMonth(m)}</span>`;
+    lane.appendChild(div);
+  }
+  // now line
+  const nowL = document.createElement('div');
+  nowL.className = 'now-line';
+  nowL.style.left = pct(NOW) + '%';
+  lane.appendChild(nowL);
+
+  // items
+  REFORMS
+    .filter(r => r.date >= start && r.date <= end)
+    .sort((a,b)=>a.date-b.date)
+    .forEach((r,i) => {
+      const it = document.createElement('div');
+      it.className = 'item ' + r.status;
+      it.style.left = pct(r.date) + '%';
+      // staircase y to avoid overlap
+      const yOffset = ((i%4) - 1.5) * 22;
+      it.style.transform = `translate(-50%, calc(-50% + ${yOffset}px))`;
+      it.dataset.id = r.id;
+      it.innerHTML = `<span class="d"></span><span class="t">${r.title}</span><span class="when">${fmtDate(r.date).replace(/\s\d{4}/,'')}</span>`;
+      it.addEventListener('click', () => selectReform(r.id));
+      lane.appendChild(it);
+    });
+})();
+
+/* ═════════ Init ═════════ */
+function init(){
+  drawGrid();
+  // Sélectionner la première réforme disponible (REFORMES_DATA, pas un ID hardcodé)
+  if (REFORMS.length > 0) selectReform(REFORMS[0].id);
+}
+
+window.renderAll = function() {
+  // Recalculer REFORMS depuis les données mises à jour
+  const newReforms = (window.REFORMES_DATA || []).map(r => ({
+    id:        r.id,
+    title:     r.titre,
+    sub:       r.source && r.source.texte ? r.source.texte.slice(0, 80) : '',
+    date:      r.dateEffet ? new Date(r.dateEffet) : new Date(),
+    status:    ({traite:'dn', cours:'on', avenir:'up', archive:'dn'})[r.statut] || 'up',
+    fam:       inferFam(r.tags),
+    tags:      r.tags || [],
+    impact:    inferImpact(r.impacts),
+    source:    r.source && r.source.texte ? r.source.texte : '',
+    sourceUrl: r.source && r.source.url ? r.source.url : null,
+    _raw:      r,
+  }));
+  REFORMS.length = 0;
+  newReforms.forEach(r => REFORMS.push(r));
+  // Effacer et redessiner
+  const scope = document.getElementById('scope');
+  const lane  = document.getElementById('lane');
+  const oldSw2 = document.getElementById('radar-sweep-svg');
+  if (oldSw2) oldSw2.remove();
+  if (scope) scope.innerHTML = '';
+  if (lane)  lane.innerHTML  = '';
+  requestAnimationFrame(function reDraw(){
+    const sc2 = document.getElementById('scope');
+    if (!sc2 || sc2.clientWidth === 0) { requestAnimationFrame(reDraw); return; }
+    init();
+  });
+};
+if (document.readyState === 'complete') {
+  requestAnimationFrame(function waitDims() {
+    const sc = document.getElementById('scope');
+    if (!sc || sc.clientWidth === 0) { requestAnimationFrame(waitDims); return; }
+    init();
+  });
+} else {
+  window.addEventListener('load', function() {
+    requestAnimationFrame(function waitDims() {
+      const sc = document.getElementById('scope');
+      if (!sc || sc.clientWidth === 0) { requestAnimationFrame(waitDims); return; }
+      init();
+    });
+  });
+}
+
+/* filter pills */
+['all','up','on','dn'].forEach(k=>{
+  document.getElementById('filter-'+k).addEventListener('click', () => {
+    document.querySelectorAll('.blip').forEach(b => {
+      const r = REFORMS.find(x=>x.id===b.dataset.id);
+      const show = k==='all' || r.status===k;
+      b.style.display = show ? '' : 'none';
+    });
+    document.querySelectorAll('.lane .item').forEach(b => {
+      const r = REFORMS.find(x=>x.id===b.dataset.id);
+      const show = k==='all' || r.status===k;
+      b.style.display = show ? '' : 'none';
+    });
+  });
+});
+
+// Injection URL portail depuis config.js
+(function(){
+  var cfg = window.PAIEKIPEDIA_CONFIG || {};
+  var url = cfg.URL_PORTAIL || '../index.html';
+  ['linkPortail','linkPortailCrumb'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.href = url;
+  });
+})();
+
+// ── Surbrillance blips au passage de la ligne radar ──────────────────────────
+(function radarHighlight() {
+  const SWEEP_DUR = 8000;
+  const HALF_WIN  = 15;
+  const start     = performance.now();
+  function tick(now) {
+    const elapsed    = (now - start) % SWEEP_DUR;
+    const sweepAngle = (elapsed / SWEEP_DUR) * 360;
+    document.querySelectorAll('.blip[data-angle]').forEach(dot => {
+      const blipAngle = parseFloat(dot.dataset.angle);
+      let   diff      = Math.abs(sweepAngle - blipAngle) % 360;
+      if (diff > 180) diff = 360 - diff;
+      if (diff <= HALF_WIN) {
+        const intensity = 1 - (diff / HALF_WIN);
+        dot.style.filter    = `brightness(${1 + intensity * 1.5})`;
+        dot.style.transform = `translate(-50%,-50%) scale(${1 + intensity * 0.5})`;
+        dot.style.zIndex    = '10';
+        const lbl = dot.querySelector('.blip-hover-label');
+        if (lbl && !lbl._radarShown) {
+          lbl._radarShown = true;
+          lbl.classList.add('visible');
+          clearTimeout(lbl._radarTimer);
+          lbl._radarTimer = setTimeout(() => {
+            lbl.classList.remove('visible');
+            lbl._radarShown = false;
+          }, 2000);
+        }
+      } else {
+        dot.style.filter    = '';
+        dot.style.transform = 'translate(-50%,-50%)';
+        dot.style.zIndex    = '3';
+      }
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

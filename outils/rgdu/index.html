@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Simulateur RGDU 2026 – KDS</title>
+  <link rel="stylesheet" href="../../assets/kds-tokens.css">
+  <link rel="stylesheet" href="theme.css">
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils Paie – Koesio Data Solutions"><img class="logoimg" src="../../assets/logo-koesio-data-solutions.png" alt="Koesio Data Solutions"/></a>
+      <div class="titles">
+        <div class="app">Simulateur RGDU 2026</div>
+        <div class="sub">Simulateur RGDU — Koesio Data Solutions <span class="badge" id="uiVersion"><span data-kds-version>v4.6</span></span></div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a href="#" class="btn back-btn" id="btnBackOutils" title="Retour aux outils Paie KDS">← Outils Paie</a>
+      <button class="btn ghost" id="btnExample">Charger exemple</button>
+      <button class="btn ghost" id="btnReset">Réinitialiser</button>
+</div>
+  </header>
+<nav aria-label="Fil d'Ariane" style="
+  font-size:12px;color:var(--kds-muted,#5b667a);
+  padding:5px 18px;background:var(--kds-surface,#fff);
+  border-bottom:1px solid var(--kds-border,rgba(0,0,0,.08));
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+  <a href="#" id="bc-portail" style="color:inherit;text-decoration:underline dotted;">PaieKipédia</a>
+  <span aria-hidden="true">›</span>
+  <a href="#" id="bc-outils" style="color:inherit;text-decoration:underline dotted;">Outils Paie</a>
+  <span aria-hidden="true">›</span>
+  <span style="color:var(--kds-text,#1b1e28);font-weight:600;">Simulateur RGDU</span>
+</nav>
+
+  <main class="layout">
+    <nav class="tabs" id="tabsWrap"><div id="tabs"></div><div id="tabsBottom" class="tabsBottom"></div></nav>
+    <section class="content">
+      <div id="view"></div>
+<footer class="footer">
+        <div class="footer-content">
+          <div>© Koesio Data Solutions — outil de simulation (non contractuel)</div>
+          <div class="muted">Données stockées localement (LocalStorage)</div>
+        </div>
+        <div class="footer-logo"><img src="../../assets/logo-koesio-data-solutions.png" alt="KDS" style="height:24px;opacity:.7"/></div>
+        <div class="koesio-squares" aria-hidden="true">
+          <span style="background:#6e398e"></span><span style="background:#e94b57"></span><span style="background:#41c0f0"></span><span style="background:#ffd618"></span>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <div id="calcRoot"></div>
+  
+  <script src="app.js"></script>
+
+  <script>
+    // Fil d'Ariane — injection URLs
+    (function(){{
+      var cfg = window.PAIEKIPEDIA_CONFIG || {{}};
+      var p = document.getElementById('bc-portail');
+      var o = document.getElementById('bc-outils');
+      if(p) p.href = cfg.URL_PORTAIL || '../../';
+      if(o) o.href = cfg.URL_OUTILS   || '../';
+    }})();
+  </script>
+
+  <script>
+    // Versioning centralisé depuis assets/version.json
+    fetch('../../assets/version.json').then(r=>r.json()).then(v=>{
+      var k = v['rgdu'];
+      if(!k) return;
+      var els = document.querySelectorAll('[data-kds-version]');
+      els.forEach(function(el){
+        el.textContent = 'v' + k.version + ' — ' + k.date;
+      });
+    }).catch(function(){});
+  </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PaieKipédia by KDS | Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/kds-ui.css" />
+  <link rel="icon" href="./assets/logo-koesio-data-solutions.png" />
+  <script src="./assets/config.js"></script>
+  <script src="./assets/changelog.js"></script>
+</head>
+<body class="page-portal">
+  <div class="kds-deco" aria-hidden="true">
+    <div class="kds-square kds-square--pink p-a"></div>
+    <div class="kds-square kds-square--yellow p-b"></div>
+    <div class="kds-square kds-square--g2 p-c"></div>
+    <div class="kds-square kds-square--blue p-d"></div>
+    <div class="kds-square kds-square--g1 p-e"></div>
+    <div class="kds-square kds-square--g3 p-f"></div>
+    <div class="kds-square kds-square--g2 p-g"></div>
+    <div class="kds-square kds-square--yellow p-h"></div>
+    <div class="kds-square kds-square--g1 p-i"></div>
+    <div class="kds-square kds-square--g2 p-j"></div>
+    <div class="kds-square kds-square--g3 p-k"></div>
+    <div class="kds-square kds-square--g2 p-l"></div>
+  </div>
+
+  <div class="kds-shell">
+    <header class="kds-topbar">
+      <div class="kds-topbar-inner">
+        <div class="kds-brand">
+          <img class="kds-logo" src="./assets/logo-koesio-data-solutions.png" alt="Koesio Data Solutions" />
+          <div class="kds-breadcrumb"><span class="kds-header-title">PaieKipédia by KDS</span></div>
+        </div>
+        <a class="kds-link kds-tooltip" href="#" data-kds-disclaimer data-tooltip="Ouvrir l'avertissement d'utilisation des contenus et outils.">Lire l'avertissement</a>
+      </div>
+    </header>
+
+    <main class="kds-main">
+      <div class="kds-container">
+        <section class="kds-hero">
+          <div class="kds-card">
+            <div class="kds-card-inner">
+              <h1 class="kds-title kds-title--logo"><img class="kds-title-logo" src="./assets/logo-paieKipedia-by-KDS.png" alt="PaieKipédia by KDS" /></h1>
+              <p class="kds-subtitle">
+                Accédez au <strong>Mémo Paie</strong> et aux <strong>Outils Paie</strong>.
+                Les contenus sont organisés par espace pour faciliter la navigation.
+              </p>
+
+              <div class="kds-actions">
+                <a class="kds-tile kds-tooltip" href="#" id="tileMemo" data-tooltip="Mémo Paie : référentiel, repères et fiches pratiques.">
+                  <div class="kds-tile-title">Mémo Paie</div>
+                  <div class="kds-tile-desc">Référentiel, repères et fiches pratiques.</div>
+                  <div class="kds-pill-row">
+                    <span class="kds-pill">Documentation</span>
+                    <span class="kds-pill">Veille &amp; repères</span>
+                  </div>
+                </a>
+
+                <a class="kds-tile kds-tooltip" href="#" id="tileSims" data-tooltip="Outils Paie : simulateurs, contrôles et aides à l'analyse (RGDU, MNS, réintégrations…).">
+                  <div class="kds-tile-title">Outils Paie</div>
+                  <div class="kds-tile-desc">Simulateurs et aides au contrôle (RGDU, MNS, réintégrations…).</div>
+                  <div class="kds-pill-row">
+                    <span class="kds-pill">Simulateurs</span>
+                    <span class="kds-pill kds-pill--new">Évolutif</span>
+                  </div>
+                </a>
+
+                <a class="kds-tile kds-tooltip" href="#" id="tileReforme"
+                   data-tooltip="Tableau de bord des réformes : impacts logiciels, campagnes KDS, frise temporelle.">
+                  <div class="kds-tile-title">Réformes</div>
+                  <div class="kds-tile-desc">Pilotage réglementaire : impacts Sage, Silae, Lucca et campagnes KDS.</div>
+                  <div class="kds-pill-row">
+                    <span class="kds-pill">Pilotage</span>
+                    <span class="kds-pill kds-pill--new">Nouveau</span>
+                  </div>
+                </a>
+
+                <a class="kds-tile kds-tooltip" href="#" id="tileVeille"
+                   data-tooltip="Bibliothèque de veille légale : publications filtrables, consultables, imprimables.">
+                  <div class="kds-tile-title">Veille légale</div>
+                  <div class="kds-tile-desc">Bibliothèque des publications — consultable, filtrable, imprimable.</div>
+                  <div class="kds-pill-row">
+                    <span class="kds-pill">Publications</span>
+                    <span class="kds-pill kds-pill--new">Nouveau</span>
+                  </div>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+          <aside class="kds-card kds-side">
+            <div class="kds-card-inner">
+
+              <!-- Bloc Dernières mises à jour (déplacé ici, visible en premier) -->
+              <div class="kds-news" id="newsBlock" style="display:none;">
+                <p class="kds-news-title">🕐 Dernières mises à jour</p>
+                <ul class="kds-news-list" id="newsList"></ul>
+              </div>
+
+              <!-- Bonnes pratiques — repliées par défaut -->
+              <div class="kds-bp-wrap">
+                <button class="kds-bp-toggle" id="bpToggle" type="button" aria-expanded="false" aria-controls="bpContent">
+                  Bonnes pratiques <span class="kds-bp-arrow" aria-hidden="true">▼</span>
+                </button>
+                <div class="kds-bp-content" id="bpContent" hidden>
+                  <ul>
+                    <li><strong>Toujours vérifier</strong> les résultats dans votre logiciel de paie avant toute utilisation officielle.</li>
+                    <li><strong>Utiliser comme support</strong> d'analyse, de contrôle et de compréhension des mécanismes de paie.</li>
+                    <li><strong>Tenir compte</strong> des spécificités de votre entreprise (conventions collectives, accords, exonérations).</li>
+                    <li><strong>Consulter un expert</strong> en cas de doute ou pour des situations complexes.</li>
+                    <li><strong>Documenter vos hypothèses</strong> de calcul pour faciliter les contrôles ultérieurs.</li>
+                    <li><strong>Mettre à jour régulièrement</strong> vos connaissances sur les évolutions réglementaires.</li>
+                  </ul>
+                  <p style="margin-top: 14px; font-size: 13px; color: #666;">
+                    <strong>⚠️ Rappel :</strong> Les résultats des outils ont une valeur indicative et ne remplacent pas une validation par un expert paie.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </aside>
+        </section>
+      </div>
+    </main>
+
+    <footer class="kds-footer">
+      <div class="kds-footer-inner">
+        <span>© 2026 Koesio Data Solutions</span>
+        <span class="kds-muted">Version 2.2 – Juin 2026</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./assets/disclaimer.js"></script>
+
+  <script>
+    // ── Toggle Bonnes pratiques ──────────────────────────────────────────
+    (function(){
+      var btn     = document.getElementById('bpToggle');
+      var content = document.getElementById('bpContent');
+      if(!btn || !content) return;
+      btn.addEventListener('click', function(){
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if(expanded){ content.setAttribute('hidden',''); }
+        else { content.removeAttribute('hidden'); }
+      });
+    })();
+  </script>
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var memo = document.getElementById("tileMemo");
+      var sims = document.getElementById("tileSims");
+      if(memo && cfg.URL_MEMO){ memo.setAttribute("href", cfg.URL_MEMO); }
+      if(sims && cfg.URL_OUTILS){ sims.setAttribute("href", cfg.URL_OUTILS); }
+      var ref = document.getElementById("tileReforme");
+      var vei = document.getElementById("tileVeille");
+      if(ref && cfg.URL_REFORME){ ref.setAttribute("href", cfg.URL_REFORME); }
+      if(vei && cfg.URL_VEILLE){  vei.setAttribute("href", cfg.URL_VEILLE); }
+    })();
+  </script>
+
+  <script>
+    // ── Bloc "Dernières mises à jour" ────────────────────────────────────
+    (function(){
+      var entries = window.PAIEKIPEDIA_CHANGELOG;
+      if(!entries || !entries.length) return;
+
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var base = cfg.URL_PORTAIL || "./";
+      var MAX = 5;
+
+      var list  = document.getElementById("newsList");
+      var block = document.getElementById("newsBlock");
+      if(!list || !block) return;
+
+      var months = ["jan.","fév.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+      function fmtDate(iso) {
+        var p = iso.split("-");
+        if(p.length < 3) return iso;
+        return parseInt(p[2],10) + " " + months[parseInt(p[1],10)-1] + " " + p[0];
+      }
+
+      var shown = entries.slice(0, MAX);
+      shown.forEach(function(e){
+        var li = document.createElement("li");
+        li.className = "kds-news-item";
+
+        var date = document.createElement("span");
+        date.className = "kds-news-date";
+        date.textContent = fmtDate(e.date);
+
+        var badge = document.createElement("span");
+        badge.className = "kds-news-badge kds-news-badge--" + (e.module || "Portail");
+        badge.textContent = e.module || "Portail";
+
+        var href = e.lien ? (base + e.lien) : null;
+        var content;
+        if(href){
+          content = document.createElement("a");
+          content.className = "kds-news-link";
+          content.href = href;
+          content.textContent = e.titre;
+        } else {
+          content = document.createElement("span");
+          content.textContent = e.titre;
+        }
+
+        li.appendChild(date);
+        li.appendChild(badge);
+        li.appendChild(content);
+        list.appendChild(li);
+      });
+
+      block.style.display = "";
+    })();
+  </script>
+
+  <script data-tooltip-to-aria>
+    (function(){
+      var els = document.querySelectorAll('[data-tooltip]');
+      els.forEach(function(el){
+        if(el.getAttribute('aria-label') || el.getAttribute('aria-describedby')) return;
+        var t = el.getAttribute('data-tooltip');
+        if(t) el.setAttribute('aria-label', t);
+      });
+    })();
+  </script>
+</body>
+</html>

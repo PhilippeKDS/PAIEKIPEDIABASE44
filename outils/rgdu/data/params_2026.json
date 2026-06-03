@@ -1,0 +1,24 @@
+{
+  "smicHoraire": 12.02,
+  "tmin": 0.02,
+  "p": 1.75,
+  "urssaf_fnal_050": 0.342,
+  "urssaf_fnal_010": 0.338,
+  "ceg_t1": 0.0129,
+  "retraite_patronale_societe": 0.0472,
+  "tdelta_fnal_010": 0.3781,
+  "tdelta_fnal_050": 0.3821,
+  "tdelta_journalistes": 0.3493,
+  "tdelta_prof_med_tp": 0.3565,
+  "tdelta_vrp": 0.3656,
+  "majoration_interim": 1.1,
+  "majoration_ccp": 1.111111111111111,
+  "a_grand_routier": 1.285714285714286,
+  "a_courte_distance": 1.142857142857143,
+  "meta": {
+    "source_xlsx": "Simulateur_RGDU_2026_Koesio_v34_2_ReferencesSage_FormatFixed.xlsx",
+    "extracted_at": "2026-01-26",
+    "data_updated": "2026-02-10",
+    "annee": 2026
+  }
+}

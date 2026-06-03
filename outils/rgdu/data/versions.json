@@ -1,0 +1,203 @@
+{
+  "title": "Suivi des versions – Simulateur RGDU 2026",
+  "note": "Règle de mise à jour : toute nouvelle évolution fonctionnelle est ajoutée en tête (ligne 5), les versions précédentes sont décalées vers le bas. La version du fichier ne change pas pour une simple mise à jour d’informations.",
+  "items": [
+    {
+      "version": "3.2",
+      "date": "2026-05-03",
+      "objectif": "Mise à jour réglementaire + correctifs UX section Présence",
+      "ajouts": "Section Présence réactive : affichage/masquage immédiat des zones (mode saisie, montants détaillés, coefficient) au clic sur les radios, sans rechargement d'onglet. Fonction updatePresenceUI() avec show/hide DOM direct.",
+      "modifications": "Formule D.241-7 IV + BOSS § 720 (01/04/2026) confirmée. Paramètres 2026 actualisés : SMIC 12,02 €, PASS 48 060 €, taux AGIRC-ARRCO et cotisations.",
+      "corrections": "Correction du comportement des radios situationAbsence et modeAbsence qui nécessitaient un changement d'onglet pour prendre effet."
+    },
+    {
+      "version": "3.1.1",
+      "objectif": "Alerte sur champs en souffrance",
+      "ajouts": "Surbrillance + message inline sur les champs concernés (error/warn).",
+      "modifications": "Ajout d’un mapping issues par champ dans le calcul; Application des issues au rendu (Simulation A/B).",
+      "corrections": "Alerte systématique sur les zones ajustées (absence>heures, présence bornée, etc.)."
+    },
+    {
+      "version": "V3.1",
+      "objectif": "Sécurisation anti-NaN",
+      "ajouts": "Bandeau erreurs/avertissements (anti-NaN); placeholders & unités sur champs sensibles.",
+      "modifications": "Arrondi final au centime sur la réduction affichée; présence/absence sécurisées (plafonds, bornes 0–1).",
+      "corrections": "Blocage explicite des cas incohérents (heures=0 avec absence), plafonnement absence>heures.",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "V3.0",
+      "objectif": "Fiabilisation audit",
+      "ajouts": "",
+      "modifications": "",
+      "corrections": "Fix URSSAF/Retraite + fmtMoney DFS",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "4.3.0 (V3)",
+      "objectif": "Fiabilisation – correctifs audit",
+      "ajouts": "",
+      "modifications": "Aucun changement métier; sécurisation de la restitution.",
+      "corrections": "Répartition URSSAF/Retraite : utilisation de tauxRetraitePrisEnCompte; Page DFS : fmtMoney disponible (affichage sécurisé).",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "4.2.1",
+      "objectif": "Tests offline robustes",
+      "ajouts": "Fallback embarqué du référentiel de tests (offline).",
+      "modifications": "Chargement des tests sécurisé (JSON externe → fallback); messages explicites.",
+      "corrections": "Plus de 0/0 OK silencieux: affiche avertissement et statut non garanti si tests indisponibles.",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "4.2.0",
+      "objectif": "Non-régression (tests)",
+      "ajouts": "Onglet « Tests » + référentiel de cas RGDU 2026.",
+      "modifications": "Ajout page Tests & non-régression; chargement data/tests_rgdu_2026.json.",
+      "corrections": "",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "4.1.1",
+      "objectif": "Hotfix stabilité (audit)",
+      "ajouts": "",
+      "modifications": "Calcul DFS : ajout fmtMoney/fmtPct.",
+      "corrections": "Fix répartition URSSAF/Retraite; Fix fonctions page DFS.",
+      "date": "2026-02-06"
+    },
+    {
+      "version": "4.1",
+      "objectif": "DFS + calculatrice + pédagogie",
+      "ajouts": "Calculatrice intégrée (standard + scientifique) avec historique et mémoire, disponible sur toutes les pages ; Ajout du choix DFS dans le Contexte global et page « Calcul DFS » (double calcul + plafonnement 130%) ; Ajout de la répartition URSSAF / Retraite dans les résultats ; Ajout des repères Sage DFS (ALG_TDFS, rubrique 63492) dans Références Sage (comparaison avec Sage Paie).",
+      "modifications": "Mode d’emploi : enrichissement (dont calculatrice) ; bouton calculatrice docké en bas du menu (rouge charte) ; ajustements d’affichage et de parcours. ; Page « Calcul DFS » : trace vulgarisée sur Scénario A uniquement, explication pas à pas renforcée. ; FAQ enrichie (DFS, présence, PPV, URSSAF/Retraite, écarts).",
+      "corrections": "Stabilité offline ; recalcul dynamique après saisie ; correctifs UI divers (focus, navigation). ; Page « Calcul DFS » : message dédié lorsque DFS = « Pas de DFS » (aucune trace affichée, indication pour activer un taux DFS).",
+      "date": "2026-01-29"
+    },
+    {
+      "version": "3.4",
+      "objectif": "Corrections calcul (RGDU)",
+      "ajouts": "",
+      "modifications": "Simulation : retour à l’affichage annuel des bases (suppression de la colonne technique) ; Simulation_B alignée ; Ajout onglet « Références Sage » (correspondances Sage Paie 100) + lien depuis Simulation + note dans Mode d’emploi",
+      "corrections": "Tdelta personnalisé : priorité à la saisie utilisateur (B10) ; FNAL : prise en compte cohérente en cas particulier ; SMIC : suppression de la majoration E32 sur E39 (majoration appliquée au coefficient uniquement)"
+    },
+    {
+      "version": "3.3",
+      "objectif": "Améliorations documentation & fiabilisation",
+      "ajouts": "",
+      "modifications": "Mode d’emploi : encadrés déplacés en B15/B16 (sans fusion) + exemples d’utilisation du comparateur ; Correction libellés FR (accents/terminologie) sur l’ensemble du classeur ; Simulation : affichage des bases conservé en annuel (fonction mensuel/annuel retirée, pas de colonne technique)",
+      "corrections": "Coefficient C arrondi à 4 décimales avant calcul (conformité légale) ; Ajustements de mise en page du Mode d’emploi (hauteurs de lignes adaptées au contenu colonne B) ; FNAL : liste corrigée (0,10% / 0,50%) ; Tdelta prend en compte le FNAL même en cas particulier (B9). ; SMIC : suppression de la majoration E32 sur E39 (majoration appliquée au coefficient uniquement)"
+    },
+    {
+      "version": "3.2",
+      "objectif": "Finalisation + documentation",
+      "ajouts": "Gestion “officielle” du versioning : Version 3. 2; Dernière mise à jour = date du jour",
+      "modifications": "Mode d’emploi restructuré pour être plus lisible; Réduction des espaces excessifs entre paragraphes",
+      "corrections": "Simulation & Simulation B : B17 et B18 laissées vides; Graphique déplacé pour ne plus gêner les tableaux (coin haut gauche en H15); Coefficient C arrondi à 4 décimales (au dix-millième le plus proche) avant calcul final, conformément au texte."
+    },
+    {
+      "version": "3.1",
+      "objectif": "Comparateur encore plus visuel",
+      "ajouts": "Flèches ▲/▼ sur les écarts; Affichage simultané gain mensuel équivalent et gain annuel équivalent; Mini graphique A vs B",
+      "modifications": "",
+      "corrections": ""
+    },
+    {
+      "version": "3.0",
+      "objectif": "Comparateur orienté client",
+      "ajouts": "Comparateur KPI : Réduction A/B, Écart, Badge Gain/Surcoût, Impact annuel équivalent (auto x12 si mensuel); Mise en couleur intelligente des écarts",
+      "modifications": "Impression propre 1 page; lecture immédiate",
+      "corrections": ""
+    },
+    {
+      "version": "2.9",
+      "objectif": "Meilleure UX + comparateur fiable",
+      "ajouts": "Ajouts d’instructions : C15 “Saisie obligatoire”; C16/C17/C18 “selon le type sélectionné”",
+      "modifications": "Suppression des blocs Parcours/Complétude/PPV (colonne J)",
+      "corrections": "Verrouillage périodicité : Simulation_B! B5 = Simulation! B5"
+    },
+    {
+      "version": "2.8",
+      "objectif": "Rendu pro + sécurité juridique",
+      "ajouts": "Préambule : Clause de non-responsabilité dans Mode d’emploi",
+      "modifications": "Finitions d’impression Dashboard (1 page); Alignements et mise en page client-ready",
+      "corrections": ""
+    },
+    {
+      "version": "2.7",
+      "objectif": "Fiabilité des listes + propreté Dashboard",
+      "ajouts": "Dashboard : suppression visuelle des couleurs vert/jaune si rien ne s’affiché",
+      "modifications": "",
+      "corrections": "Restauration listes : Simulation! B5 Mensuel / Annuel; Simulation_B! B5 Mensuel / Annuel; Recopie validations manquantes dans Simulation B"
+    },
+    {
+      "version": "2.6",
+      "objectif": "Rétablir un affichage clair du mode",
+      "ajouts": "",
+      "modifications": "Réintégration affichage MODE : Mensuel / Annuel (une seule zone); Ordre onglets : Comparateur entre Simulation et Simulation B",
+      "corrections": ""
+    },
+    {
+      "version": "2.5",
+      "objectif": "Simplification + alignement",
+      "ajouts": "",
+      "modifications": "Suppression doublons Mensuel / Annuel; Client → salarié; Suppression lignes inutiles; Suppression bloc rappel règle de calcul; Structure : Aide → Mode d’emploi; Ajustement largeur colonne A",
+      "corrections": "Comparateur : Simulation = scénario A; Suppression Simulation_A"
+    },
+    {
+      "version": "2.4",
+      "objectif": "Enrichissement fonctionnel",
+      "ajouts": "Comparateur A/B; Onglets Simulation_A + Simulation_B; Glossaire RGDU; Équivalences mensuel / annuel + diagnostic",
+      "modifications": "",
+      "corrections": "Correction SMIC horaire dans Paramètres (12, 02 €)"
+    },
+    {
+      "version": "2.3",
+      "objectif": "Rendre le fichier autoportant",
+      "ajouts": "Mode d’emploi rédigé dans l’onglet Aide",
+      "modifications": "Aide rendue plus accessible et exploitable",
+      "corrections": ""
+    },
+    {
+      "version": "2.2",
+      "objectif": "Meilleure clarté des choix",
+      "ajouts": "Bloc récapitulatif Dashboard : Paramètres Société / Paramètres Salarié",
+      "modifications": "Mise en page plus structurée et logique",
+      "corrections": ""
+    },
+    {
+      "version": "2.1",
+      "objectif": "Plus pédagogique",
+      "ajouts": "Blocs d’explication + contrôles dans le Dashboard; Indications de lecture",
+      "modifications": "",
+      "corrections": ""
+    },
+    {
+      "version": "2.0",
+      "objectif": "Style Dashboard validé",
+      "ajouts": "",
+      "modifications": "Dashboard aligné sur le style de la Synthèse V1. 0; Mise en forme propre et lisible",
+      "corrections": ""
+    },
+    {
+      "version": "1.6",
+      "objectif": "Corriger la cause racine des réparations Excel",
+      "ajouts": "",
+      "modifications": "",
+      "corrections": "Correction des formules corrompues à l’origine des réparations Excel (sheet1. xml); Stabilisation durable de la structure"
+    },
+    {
+      "version": "1.0",
+      "objectif": "Ergonomie Dashboard",
+      "ajouts": "",
+      "modifications": "Réduction du bandeau haut; Déplacement du texte de A3 vers H1 (header plus compact)",
+      "corrections": "Stabilisation du rendu"
+    },
+    {
+      "version": "0.7",
+      "objectif": "Stabilité du tableau Excel",
+      "ajouts": "",
+      "modifications": "Ajustements techniques pour fichier ouvrable en local sans réparation",
+      "corrections": "Suppression du message d’erreur Excel à l’ouverture; Réparation des listes déroulantes"
+    }
+  ]
+}
