@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Références — MNS — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="./assets/img/logo-kds.png" alt="Koesio Data Solutions" />
+        <div class="title">
+      <div class="title">
+        <strong>Simulateur Montant Net Social (MNS)</strong>
+        <span>Références (URSSAF / DSN)</span>
+      </div>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="./index.html">Simulateur</a>
+      <a class="nav-link" href="./parameters.html">Paramètres</a>
+      <a class="nav-link active" href="./references.html">Références</a>
+      <a class="nav-link" href="./help.html">Mode d’emploi</a>
+      <a class="nav-link" href="./tests.html">Tests</a>
+    </nav>
+
+    <div class="top-actions">
+      <a class="nav-link" href="./index.html">← Retour au simulateur</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <div class="card">
+      <h2>Blocs DSN & formule URSSAF (texte)</h2>
+      <div class="content">
+        <div class="note">
+          <strong>Montant net social estimé =</strong> socle + ajouts − déductions
+          <ul style="margin:10px 0 0 18px">
+            <li><strong>Socle</strong> :
+              <ul style="margin:6px 0 0 18px">
+                <li><em>CDD 2 premiers mois / RNF négative</em> : <span class="badge">S21.G00.50.002</span> RNF + <span class="badge">S21.G00.56.002</span> indu (type 03)</li>
+                <li><em>Cas général</em> : <span class="badge">S21.G00.50.013</span> base PAS + <span class="badge">S21.G00.50.011</span> part non imposable</li>
+              </ul>
+            </li>
+            <li><strong>Ajouts</strong> :
+              <ul style="margin:6px 0 0 18px">
+                <li><span class="badge">S21.G00.52.001</span> primes / indemnités (types URSSAF)</li>
+                <li><span class="badge">S21.G00.58</span> HS/HC exonérées (type 01)</li>
+              </ul>
+            </li>
+            <li><strong>Déductions</strong> :
+              <ul style="margin:6px 0 0 18px">
+                <li><span class="badge">S21.G00.54</span> parts patronales mutuelles (type 92)</li>
+                <li>CSG non déductible = (Assiette CSG <span class="badge">S21.G00.78</span> code 04 − PPV placée <span class="badge">S21.G00.52</span> type 906 − abondements <span class="badge">S21.G00.54</span> 14/15/16) × taux</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hint" style="margin-top:10px">
+          Le simulateur réalise une analyse “bulletin” : saisie des éléments → calcul → comparaison avec le MNS imprimé sur le bulletin.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Courrier URSSAF</h2>
+      <div class="content">
+        <div class="hint">Méthode de contrôle (DL_MNS_002).</div>
+        <picture>
+              <source srcset="./assets/img/urssaf-controle-mns.webp" type="image/webp" />
+              <img src="./assets/img/urssaf-controle-mns.jpg" alt="Courrier URSSAF - contrôle du Montant Net Social" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin-top:10px" />
+            </picture>
+      </div>
+    </div>
+  </div>
+</main>
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">Version <b>MNS-v4.3</b> • MAJ <b>06/02/2026</b></div>
+  <script src="./assets/js/boss-references.js"></script>
+  <script src="./assets/js/boss-validator.js"></script>
+  <script src="./assets/js/calculator.js"></script>
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+</body>
+</html>

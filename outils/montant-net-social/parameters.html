@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paramètres — MNS — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="./assets/img/logo-kds.png" alt="Koesio Data Solutions" />
+        <div class="title">
+      <div class="title">
+        <strong>Simulateur Montant Net Social (MNS)</strong>
+        <span>Paramètres</span>
+      </div>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="./index.html">Simulateur</a>
+      <a class="nav-link active" href="./parameters.html">Paramètres</a>
+      <a class="nav-link" href="./references.html">Références</a>
+      <a class="nav-link" href="./help.html">Mode d’emploi</a>
+      <a class="nav-link" href="./tests.html">Tests</a>
+    </nav>
+
+    <div class="top-actions">
+      <a class="nav-link" href="./index.html">Retour</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <div class="card">
+      <h2>Paramètres de contrôle</h2>
+      <div class="content">
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Seuil & taux</div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Seuil d’alerte (écart %) <span class="badge">défaut 20%</span></label>
+              <input id="threshold" type="number" inputmode="decimal" step="0.1" />
+              <div class="help">Si l’écart % dépasse ce seuil, le résultat passe en “Alerte”.</div>
+            </div>
+            <div class="field">
+              <label>Taux CSG non déductible (%) <span class="badge">défaut 2,9%</span></label>
+              <input id="taux-csg" type="number" inputmode="decimal" step="0.01" />
+              <div class="help">Paramètre URSSAF (modifiable si la règle évolue).</div>
+            </div>
+          </div>
+
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Mode d’arrondi <span class="badge">nouveau</span></label>
+              <select id="rounding-mode">
+                <option value="final">Fin de chaîne (arrondi uniquement sur le résultat)</option>
+                <option value="step">Par étape (arrondi à 2 décimales à chaque étape)</option>
+              </select>
+              <div class="help">Permet d’expliquer certains écarts de centimes selon les pratiques d’arrondi.</div>
+            </div>
+          </div>
+
+
+          <div style="margin-top:12px">
+            <button class="btn-primary" id="btn-save">Enregistrer</button>
+            <button class="btn" id="btn-reset-params">Réinitialiser</button>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:12px">
+          Ces paramètres s’appliquent au simulateur bulletin et sont stockés localement dans le navigateur.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Aide</h2>
+      <div class="content">
+        <div class="section">
+          <div class="hint">
+            <ul style="margin:0;padding-left:18px">
+              <li><b>Seuil</b> : sert uniquement à l’alerte visuelle (OK / Alerte).</li>
+              <li><b>Taux 2,9%</b> : utilisé dans la déduction “CSG non déductible”.</li>
+              <li>Pour comprendre la formule, voir l’onglet <b>Références</b>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">Version <b>MNS-v4.3</b> • MAJ <b>06/02/2026</b></div>
+
+<div class="toast" id="toast"></div>
+<script src="./assets/js/params.js"></script>
+  <script src="./assets/js/calculator.js"></script>
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+</body>
+</html>

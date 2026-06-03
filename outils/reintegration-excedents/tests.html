@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Tests Unitaires — Simulateur Réintégration</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <style>
+    :root{
+      --primary:#6e398e;
+      --accent:#ea4b58;
+      --success:#10b981;
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --text:#1b1e28;
+      --muted:#5f6677;
+      --line:#e6e8f0;
+    }
+    
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family: "Century Gothic", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:var(--bg);
+      padding:20px;
+    }
+    
+    .container {
+      max-width:1000px;
+      margin:0 auto;
+    }
+    
+    .header {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 12px 30px rgba(20,23,35,.08);
+      padding:20px 24px;
+      margin-bottom:20px;
+    }
+    
+    .header h1 {
+      margin:0 0 8px;
+      font-size:24px;
+      color:var(--primary);
+    }
+    
+    .header p {
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    
+    .actions {
+      display:flex;
+      gap:12px;
+      margin-bottom:20px;
+    }
+    
+    .btn {
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.85);
+      color:var(--text);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      padding:10px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(20,23,35,.06);
+      transition:transform .08s ease;
+      font-weight:650;
+      font-size:14px;
+      font-family:inherit;
+    }
+    
+    .btn:hover {
+      transform:translateY(-1px);
+      border-color:rgba(63,192,240,.55);
+    }
+    
+    .btn-primary {
+      background:linear-gradient(135deg, rgba(110,57,142,.96), rgba(43,83,160,.90));
+      border-color:rgba(110,57,142,.35);
+      color:#fff;
+    }
+    
+    .console {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 12px 30px rgba(20,23,35,.08);
+      padding:20px;
+    }
+    
+    .console h2 {
+      margin:0 0 12px;
+      font-size:16px;
+      color:var(--text);
+    }
+    
+    .console-output {
+      background:#1e1e1e;
+      color:#d4d4d4;
+      border-radius:12px;
+      padding:16px;
+      font-family:'Courier New', monospace;
+      font-size:13px;
+      line-height:1.6;
+      max-height:600px;
+      overflow-y:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    
+    .test-pass {
+      color:#10b981;
+    }
+    
+    .test-fail {
+      color:#ef4444;
+    }
+    
+    .test-group {
+      color:#60a5fa;
+      font-weight:bold;
+    }
+    
+    .summary {
+      background:linear-gradient(135deg, rgba(110,57,142,.06), rgba(63,192,240,.04));
+      border:1px solid rgba(110,57,142,.20);
+      border-radius:14px;
+      padding:16px;
+      margin-top:20px;
+    }
+    
+    .summary h3 {
+      margin:0 0 8px;
+      font-size:14px;
+      color:var(--primary);
+    }
+    
+    .stat {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:6px 0;
+      font-size:14px;
+    }
+    
+    .stat-label {
+      color:var(--muted);
+    }
+    
+    .stat-value {
+      font-weight:700;
+      color:var(--text);
+    }
+    
+    .stat-value.success {
+      color:var(--success);
+    }
+    
+    .stat-value.error {
+      color:var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 Tests Unitaires</h1>
+      <p>Simulateur Réintégration sociale & fiscale — Suite de tests automatisés</p>
+    </div>
+    
+    <div class="actions">
+      <button class="btn btn-primary" id="btnRunTests">▶️ Exécuter les tests</button>
+      <button class="btn" id="btnClearConsole">🗑️ Effacer la console</button>
+      <a class="btn" href="index.html">← Retour au simulateur</a>
+    </div>
+    
+    <div class="console">
+      <h2>Console de tests</h2>
+      <div class="console-output" id="consoleOutput">
+        Cliquez sur "Exécuter les tests" pour lancer la suite de tests...
+      </div>
+    </div>
+    
+    <div class="summary" id="summary" style="display:none;">
+      <h3>📊 Résumé</h3>
+      <div class="stat">
+        <span class="stat-label">Total:</span>
+        <span class="stat-value" id="statTotal">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Réussis:</span>
+        <span class="stat-value success" id="statPassed">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Échoués:</span>
+        <span class="stat-value error" id="statFailed">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Taux de réussite:</span>
+        <span class="stat-value" id="statRate">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="tests.js"></script>
+  <script>
+    const consoleOutput = document.getElementById('consoleOutput');
+    const summaryEl = document.getElementById('summary');
+    
+    // Intercepter console.log/error pour afficher dans l'UI
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalGroup = console.group;
+    const originalGroupEnd = console.groupEnd;
+    const originalClear = console.clear;
+    
+    let indent = 0;
+    
+    console.clear = function() {
+      originalClear.apply(console, arguments);
+      consoleOutput.textContent = '';
+      summaryEl.style.display = 'none';
+      indent = 0;
+    };
+    
+    console.group = function(label) {
+      originalGroup.apply(console, arguments);
+      const line = document.createElement('div');
+      line.className = 'test-group';
+      line.style.marginLeft = (indent * 20) + 'px';
+      line.textContent = label;
+      consoleOutput.appendChild(line);
+      indent++;
+    };
+    
+    console.groupEnd = function() {
+      originalGroupEnd.apply(console, arguments);
+      indent = Math.max(0, indent - 1);
+    };
+    
+    console.log = function(...args) {
+      originalLog.apply(console, arguments);
+      const text = args.join(' ');
+      const line = document.createElement('div');
+      line.style.marginLeft = (indent * 20) + 'px';
+      
+      if (text.startsWith('✅')) {
+        line.className = 'test-pass';
+      } else if (text.startsWith('❌')) {
+        line.className = 'test-fail';
+      }
+      
+      line.textContent = text;
+      consoleOutput.appendChild(line);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    };
+    
+    console.error = function(...args) {
+      originalError.apply(console, arguments);
+      const text = args.join(' ');
+      const line = document.createElement('div');
+      line.className = 'test-fail';
+      line.style.marginLeft = (indent * 20) + 'px';
+      line.textContent = text;
+      consoleOutput.appendChild(line);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    };
+    
+    // Boutons
+    document.getElementById('btnRunTests').addEventListener('click', () => {
+      console.clear();
+      const results = window.SimulateurTests.runTests();
+      
+      // Afficher résumé
+      const total = results.passed + results.failed;
+      const rate = total > 0 ? Math.round((results.passed / total) * 100) : 0;
+      
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPassed').textContent = results.passed;
+      document.getElementById('statFailed').textContent = results.failed;
+      document.getElementById('statRate').textContent = rate + '%';
+      
+      summaryEl.style.display = 'block';
+    });
+    
+    document.getElementById('btnClearConsole').addEventListener('click', () => {
+      console.clear();
+      consoleOutput.textContent = 'Console effacée. Exécutez les tests pour voir les résultats.';
+    });
+    
+    // Auto-exécution au chargement
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('btnRunTests').click();
+      }, 500);
+    });
+  </script>
+</body>
+</html>

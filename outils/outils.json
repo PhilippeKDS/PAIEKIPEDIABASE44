@@ -1,0 +1,39 @@
+{
+  "title": "Outils Paie",
+  "updated": "2026-05-03",
+  "items": [
+    {
+      "id": "montant-net-social",
+      "name": "Montant Net Social",
+      "description": "Calcul et lecture du Montant Net Social (MNS) – aide à la compréhension.",
+      "url": "../outils/montant-net-social/",
+      "tags": [
+        "simulateur"
+      ],
+      "status": "production",
+      "updated": "2026-02-01"
+    },
+    {
+      "id": "rgdu",
+      "name": "RGDU",
+      "description": "Aide au contrôle des mécanismes RGDU selon vos hypothèses.",
+      "url": "../outils/rgdu/",
+      "tags": [
+        "simulateur"
+      ],
+      "status": "production",
+      "updated": "2026-05-03"
+    },
+    {
+      "id": "reintegration-excedents",
+      "name": "Réintégration des excédents",
+      "description": "Réintégration sociale et fiscale des excédents (retraite suppl. & prévoyance).",
+      "url": "../outils/reintegration-excedents/",
+      "tags": [
+        "simulateur"
+      ],
+      "status": "production",
+      "updated": "2026-02-01"
+    }
+  ]
+}

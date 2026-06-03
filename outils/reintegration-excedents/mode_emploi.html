@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Guide pratique — Simulateur Réintégration sociale & fiscale</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Styles spécifiques au guide */
+    .guide-hero {
+      background: linear-gradient(135deg, rgba(110,57,142,.08), rgba(63,192,240,.06));
+      border: 1px solid rgba(110,57,142,.18);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    
+    .guide-hero h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      color: var(--primary);
+    }
+    
+    .guide-hero .lead {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      margin: 0;
+    }
+    
+    .guide-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .guide-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .guide-meta-icon {
+      font-size: 18px;
+    }
+    
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .toc h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      color: var(--primary);
+    }
+    
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .toc-item {
+      margin: 8px 0;
+    }
+    
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all .12s ease;
+      border: 1px solid transparent;
+    }
+    
+    .toc-link:hover {
+      background: rgba(110,57,142,.06);
+      border-color: rgba(110,57,142,.20);
+      transform: translateX(4px);
+    }
+    
+    .toc-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    
+    .toc-title {
+      font-weight: 650;
+    }
+    
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 20px;
+      scroll-margin-top: 80px;
+    }
+    
+    .section h2 {
+      margin: 0 0 20px;
+      font-size: 22px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .section-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(110,57,142,.96), rgba(43,83,160,.90));
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .section h3 {
+      margin: 24px 0 12px;
+      font-size: 17px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    
+    .section h3:first-of-type {
+      margin-top: 0;
+    }
+    
+    .section p {
+      margin: 0 0 16px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    
+    .section p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section ul {
+      margin: 12px 0;
+      padding-left: 24px;
+      line-height: 1.7;
+    }
+    
+    .section li {
+      margin: 8px 0;
+    }
+    
+    .pro-tip {
+      background: linear-gradient(135deg, rgba(63,192,240,.08), rgba(63,192,240,.04));
+      border: 1px solid rgba(63,192,240,.25);
+      border-left: 4px solid var(--info);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin: 20px 0;
+    }
+    
+    .pro-tip-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--info);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .pro-tip-content {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .warning-box {
+      background: linear-gradient(135deg, rgba(234,75,88,.08), rgba(234,75,88,.04));
+      border: 1px solid rgba(234,75,88,.25);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin: 20px 0;
+    }
+    
+    .warning-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .warning-content {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .formula-box {
+      background: #f8f9fa;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+    
+    .formula-title {
+      font-weight: 700;
+      color: var(--primary);
+      font-family: "Century Gothic", sans-serif;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .formula {
+      color: var(--text);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      counter-reset: step-counter;
+    }
+    
+    .step-item {
+      position: relative;
+      padding-left: 50px;
+      margin-bottom: 24px;
+      counter-increment: step-counter;
+    }
+    
+    .step-item::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(110,57,142,.12), rgba(63,192,240,.08));
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 16px;
+    }
+    
+    .step-title {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    
+    .step-desc {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .example-box {
+      background: linear-gradient(135deg, rgba(255,214,30,.10), rgba(255,214,30,.05));
+      border: 1px solid rgba(255,214,30,.30);
+      border-radius: 14px;
+      padding: 18px;
+      margin: 20px 0;
+    }
+    
+    .example-title {
+      font-weight: 700;
+      color: #d97706;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+    
+    .example-content {
+      background: rgba(255,255,255,.7);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    
+    .example-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      font-size: 14px;
+    }
+    
+    .example-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .example-label {
+      color: var(--muted);
+    }
+    
+    .example-value {
+      font-weight: 650;
+      color: var(--text);
+    }
+    
+    .quick-ref {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .quick-ref-item {
+      background: rgba(110,57,142,.04);
+      border: 1px solid rgba(110,57,142,.15);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    
+    .quick-ref-label {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    
+    .quick-ref-value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    
+    .legal-notice {
+      background: linear-gradient(135deg, rgba(20,23,35,.04), rgba(20,23,35,.02));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    
+    .legal-notice strong {
+      color: var(--text);
+    }
+    
+    @media (max-width: 768px) {
+      .guide-hero h1 {
+        font-size: 22px;
+      }
+      
+      .section h2 {
+        font-size: 19px;
+      }
+      
+      .quick-ref {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="../../assets/logo-koesio-data-solutions.png" alt="Logo Koesio Data Solutions" class="logo" />
+    <div class="brand-text">
+      <div class="brand-name">Koesio Data Solutions</div>
+      <div class="brand-sub">Guide pratique — Réintégration sociale & fiscale</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <a class="btn btn-primary" href="index.html">← Retour au simulateur</a>
+  </div>
+</header>
+
+<main class="wrap">
+  
+  <!-- Hero -->
+  <div class="guide-hero">
+    <h1>Guide pratique pour gestionnaires de paie</h1>
+    <p class="lead">
+      Ce simulateur vous aide à <strong>calculer et contrôler les réintégrations sociales et fiscales</strong> 
+      liées aux excédents de cotisations de retraite supplémentaire et prévoyance collective, conformément au BOSS.
+    </p>
+    <div class="guide-meta">
+      <div class="guide-meta-item">
+        <span class="guide-meta-icon">👥</span>
+        <span>Destiné aux gestionnaires de paie</span>
+      </div>
+      <div class="guide-meta-item">
+        <span class="guide-meta-icon">📚</span>
+        <span>Conforme BOSS</span>
+      </div>
+      <div class="guide-meta-item">
+        <span class="guide-meta-icon">⏱️</span>
+        <span>Lecture : 10 min</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table des matières -->
+  <div class="toc">
+    <h2>📑 Sommaire</h2>
+    <ul class="toc-list">
+      <li class="toc-item">
+        <a href="#contexte" class="toc-link">
+          <span class="toc-number">1</span>
+          <span class="toc-title">Contexte et principes</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#qualification" class="toc-link">
+          <span class="toc-number">2</span>
+          <span class="toc-title">Qualification des dispositifs (P1)</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#parametrage" class="toc-link">
+          <span class="toc-number">3</span>
+          <span class="toc-title">Paramétrage initial</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#saisie" class="toc-link">
+          <span class="toc-number">4</span>
+          <span class="toc-title">Saisie des données en cumul</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#interpretation" class="toc-link">
+          <span class="toc-number">5</span>
+          <span class="toc-title">Interprétation des résultats</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#integration" class="toc-link">
+          <span class="toc-number">6</span>
+          <span class="toc-title">Intégration en paie</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#cas-pratiques" class="toc-link">
+          <span class="toc-number">7</span>
+          <span class="toc-title">Cas pratiques</span>
+        </a>
+      </li>
+      <li class="toc-item">
+        <a href="#formules" class="toc-link">
+          <span class="toc-number">8</span>
+          <span class="toc-title">Formules de calcul</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Section 1: Contexte -->
+  <section id="contexte" class="section">
+    <h2>
+      <span class="section-number">1</span>
+      Contexte et principes
+    </h2>
+    
+    <h3>Pourquoi ce simulateur ?</h3>
+    <p>
+      Les cotisations patronales de retraite supplémentaire et prévoyance collective bénéficient d'exonérations 
+      sociales et fiscales <strong>dans la limite de plafonds fixés par le BOSS</strong>. Au-delà de ces plafonds, 
+      les excédents doivent être réintégrés :
+    </p>
+    <ul>
+      <li><strong>En base sociale</strong> : soumis aux cotisations de Sécurité sociale</li>
+      <li><strong>En base fiscale</strong> : imposables à l'IR (net imposable)</li>
+    </ul>
+    
+    <p>
+      Ce simulateur calcule automatiquement ces excédents et vous indique <strong>le montant à réintégrer sur le mois contrôlé</strong>.
+    </p>
+
+    <h3>Principe du cumul (YTD)</h3>
+    <p>
+      Le simulateur fonctionne en <strong>cumul depuis janvier</strong> ("Year To Date" - YTD). Pour chaque contrôle mensuel, 
+      vous saisissez les montants cumulés depuis le début de l'année :
+    </p>
+    
+    <div class="example-box">
+      <div class="example-title">
+        💡 Exemple pratique
+      </div>
+      <div class="example-content">
+        <div class="example-row">
+          <span class="example-label">Mois à contrôler</span>
+          <span class="example-value">Mars</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Cotisations retraite saisies</span>
+          <span class="example-value">Janvier + Février + Mars</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Réintégration cumulée à fin mars</span>
+          <span class="example-value">450 €</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Déjà réintégré à fin février</span>
+          <span class="example-value">150 €</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Delta à opérer en mars</span>
+          <span class="example-value">450 − 150 = 300 €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Conseil gestionnaire
+      </div>
+      <p class="pro-tip-content">
+        Ce principe de cumul facilite le pilotage en cours d'année et permet de détecter rapidement 
+        tout écart par rapport aux plafonds. Vous pouvez contrôler n'importe quel mois sans reprendre 
+        l'historique complet.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 2: Qualification -->
+  <section id="qualification" class="section">
+    <h2>
+      <span class="section-number">2</span>
+      Qualification des dispositifs (P1)
+    </h2>
+    
+    <p>
+      <strong>La qualification est obligatoire</strong> pour garantir l'application correcte des plafonds BOSS. 
+      Vous devez cocher au moins une des deux cases :
+    </p>
+
+    <div class="quick-ref">
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">☑ Prévoyance collective et obligatoire</div>
+        <div class="quick-ref-value">
+          Régimes de prévoyance santé, incapacité, invalidité, décès couvrant l'ensemble 
+          du personnel ou une catégorie objective.
+        </div>
+      </div>
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">☑ Retraite supplémentaire</div>
+        <div class="quick-ref-value">
+          Régimes article 83, PERE obligatoire, versements employeur au titre de la 
+          retraite supplémentaire à cotisations définies.
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-title">
+        ⚠️ Attention
+      </div>
+      <p class="warning-content">
+        Si vous décochez les deux cases, le simulateur bloquera le calcul. Les plafonds d'exonération 
+        ne s'appliquent qu'aux régimes <strong>collectifs et obligatoires</strong> qualifiés conformément 
+        au BOSS.
+      </p>
+    </div>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 En pratique
+      </div>
+      <p class="pro-tip-content">
+        Dans la majorité des cas, laissez les deux cases cochées. Décochez une brique uniquement si vous 
+        souhaitez neutraliser ses plafonds (par exemple, pour tester un scénario sans prévoyance).
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 3: Paramétrage -->
+  <section id="parametrage" class="section">
+    <h2>
+      <span class="section-number">3</span>
+      Paramétrage initial
+    </h2>
+
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-title">Année</div>
+        <p class="step-desc">
+          Sélectionnez l'année du contrôle. Le PASS correspondant se charge automatiquement 
+          (modifiable manuellement si besoin).
+        </p>
+      </li>
+      
+      <li class="step-item">
+        <div class="step-title">PASS annuel</div>
+        <p class="step-desc">
+          Le Plafond Annuel de la Sécurité Sociale est pré-rempli selon l'année. 
+          Valeurs 2024-2026 : 46 368 € / 47 100 € / 48 060 €. Vous pouvez le modifier si nécessaire.
+        </p>
+      </li>
+      
+      <li class="step-item">
+        <div class="step-title">Mois de paie à contrôler</div>
+        <p class="step-desc">
+          Indiquez le mois pour lequel vous effectuez le contrôle. Ce paramètre est utilisé 
+          pour les libellés d'export et le mode proratisé.
+        </p>
+      </li>
+      
+      <li class="step-item">
+        <div class="step-title">Mode de plafonds</div>
+        <p class="step-desc">
+          <strong>Progressif</strong> (recommandé) : les plafonds sont proratisés au mois contrôlé (pilotage mensuel).<br>
+          <strong>Annuel</strong> : plafonds annuels complets (contrôle de fin d'année).
+        </p>
+      </li>
+    </ol>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Mode progressif ou annuel ?
+      </div>
+      <p class="pro-tip-content">
+        <strong>En cours d'année</strong> : utilisez le mode progressif. Les plafonds seront calculés au prorata 
+        du nombre de mois écoulés (exemple : juin = 6/12 du PASS).<br>
+        <strong>En fin d'année</strong> ou pour une régularisation annuelle : passez en mode annuel.
+      </p>
+    </div>
+
+    <h3>Options avancées</h3>
+    
+    <div class="quick-ref">
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">Autoriser un delta négatif</div>
+        <div class="quick-ref-value">
+          À activer uniquement pour corriger une réintégration excessive déjà opérée 
+          (reprise d'erreur, régularisation).
+        </div>
+      </div>
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">Synchroniser R_fisc et R_soc</div>
+        <div class="quick-ref-value">
+          Option activée par défaut. Permet de saisir une seule rémunération de référence 
+          si vos bases fiscale et sociale sont identiques.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Saisie -->
+  <section id="saisie" class="section">
+    <h2>
+      <span class="section-number">4</span>
+      Saisie des données en cumul
+    </h2>
+
+    <h3>Rémunérations de référence</h3>
+    <p>
+      Saisissez les rémunérations <strong>brutes cumulées depuis janvier</strong> jusqu'au mois contrôlé :
+    </p>
+    
+    <div class="quick-ref">
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">R_soc (base sociale)</div>
+        <div class="quick-ref-value">
+          Rémunération brute soumise à cotisations (assiette brute Sécurité sociale). 
+          C'est généralement le brut URSSAF.
+        </div>
+      </div>
+      <div class="quick-ref-item">
+        <div class="quick-ref-label">R_fisc (base fiscale)</div>
+        <div class="quick-ref-value">
+          Rémunération imposable de référence. Inclut la part patronale frais de santé si imposable. 
+          Auto-rempli si synchronisation activée.
+        </div>
+      </div>
+    </div>
+
+    <h3>Cotisations retraite supplémentaire (cumul)</h3>
+    <ul>
+      <li><strong>Part salariale</strong> : Cotisations article 83, PERE-OB salarié (cumul depuis janvier)</li>
+      <li><strong>Part employeur</strong> : Cotisations patronales article 83, PERE-OB employeur (cumul depuis janvier)</li>
+    </ul>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Champs experts (mode Expert)
+      </div>
+      <p class="pro-tip-content">
+        Le mode Expert donne accès à des champs additionnels : CET affecté à la retraite, 
+        abondement PERCO/PERE-CO, jours CET exonérés IR. Ces montants impactent les plafonds. 
+        Laissez à 0 si non concerné.
+      </p>
+    </div>
+
+    <h3>Cotisations prévoyance complémentaire (cumul)</h3>
+    <ul>
+      <li><strong>Part salariale</strong> : Cotisations salariales prévoyance (frais de santé inclus si non isolés)</li>
+      <li><strong>Part employeur hors frais de santé</strong> : Cotisations patronales incapacité, invalidité, décès</li>
+      <li><strong>Part patronale frais de santé</strong> : Part employeur spécifique santé/mutuelle (<strong>toujours imposable</strong>)</li>
+    </ul>
+
+    <div class="warning-box">
+      <div class="warning-title">
+        ⚠️ Frais de santé : particularité fiscale
+      </div>
+      <p class="warning-content">
+        La part patronale frais de santé est <strong>toujours imposable</strong>, dès le premier euro, 
+        même si elle reste dans les plafonds d'exonération sociale. Le simulateur le prend en compte automatiquement.
+      </p>
+    </div>
+
+    <h3>Réintégrations déjà opérées</h3>
+    <p>
+      Pour calculer le <strong>delta du mois</strong>, indiquez les réintégrations déjà passées en paie 
+      (cumul jusqu'au mois précédent) :
+    </p>
+    
+    <ul>
+      <li><strong>Social déjà réintégré</strong> : Montant social cumulé réintégré jusqu'à N-1</li>
+      <li><strong>Fiscal déjà réintégré</strong> : Montant fiscal cumulé réintégré jusqu'à N-1</li>
+    </ul>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Ventilation sal/pat (optionnel)
+      </div>
+      <p class="pro-tip-content">
+        Si vous connaissez la répartition exacte du fiscal déjà réintégré (cotisations salariales non déductibles 
+        vs contributions patronales imposables), renseignez-la dans les champs experts. Sinon, le simulateur 
+        ventile automatiquement au prorata.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 5: Interprétation -->
+  <section id="interpretation" class="section">
+    <h2>
+      <span class="section-number">5</span>
+      Interprétation des résultats
+    </h2>
+
+    <h3>Encadré « À passer ce mois-ci »</h3>
+    <p>
+      L'encadré principal affiche de manière synthétique les montants à réintégrer sur le bulletin du mois contrôlé.
+    </p>
+
+    <h3>KPI détaillés</h3>
+    <ul>
+      <li><strong>Réintégration sociale du mois</strong> : montant à ajouter aux bases de cotisations (vieillesse déplafonnée recommandé)</li>
+      <li><strong>Réintégration fiscale du mois</strong> : montant à ajouter au net imposable</li>
+      <li><strong>Ventilation fiscale</strong> : répartition entre cotisations salariales non déductibles et contributions patronales imposables</li>
+    </ul>
+
+    <h3>Bouton « Voir le détail des calculs »</h3>
+    <p>
+      Cliquez sur ce bouton pour ouvrir le panneau latéral avec :
+    </p>
+    <ul>
+      <li>Onglet <strong>Détails de calcul</strong> : étapes intermédiaires, plafonds, composantes, excédents</li>
+      <li>Onglet <strong>Règles utilisées</strong> : formules BOSS appliquées</li>
+    </ul>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Exports disponibles
+      </div>
+      <p class="pro-tip-content">
+        <strong>Excel (.xml)</strong> : fichier SpreadsheetML avec 4 onglets (Synthèse, Entrées, Détail Social, Détail Fiscal).<br>
+        <strong>PDF</strong> : impression du détail des calculs + règles.<br>
+        <strong>JSON</strong> : export de configuration pour sauvegarde ou partage.<br>
+        <strong>Lien</strong> : URL pré-remplie avec vos saisies (partage avec collègues).
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 6: Intégration -->
+  <section id="integration" class="section">
+    <h2>
+      <span class="section-number">6</span>
+      Intégration en paie
+    </h2>
+
+    <h3>Réintégration sociale</h3>
+    <p>
+      Le montant social à réintégrer doit être ajouté aux <strong>bases de cotisations</strong>. Selon votre logiciel de paie :
+    </p>
+    
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-title">Créez une rubrique de réintégration sociale</div>
+        <p class="step-desc">
+          Type : « Base » ou « Complément de base »<br>
+          Montant : Delta social du mois (ex: 325,50 €)<br>
+          Cotisations : Vieillesse déplafonnée, CSG/CRDS (recommandé)
+        </p>
+      </li>
+      
+      <li class="step-item">
+        <div class="step-title">Vérifiez l'impact sur les cotisations plafonnées</div>
+        <p class="step-desc">
+          Selon votre logiciel, la réintégration peut ou non entrer dans les bases plafonnées 
+          (vieillesse plafonnée, chômage). Le simulateur propose une estimation en mode Expert 
+          (section « Plafonnements optionnels »).
+        </p>
+      </li>
+    </ol>
+
+    <div class="warning-box">
+      <div class="warning-title">
+        ⚠️ Attention aux plafonds de cotisations
+      </div>
+      <p class="warning-content">
+        La réintégration sociale augmente les bases de cotisations. Vérifiez que vous ne dépassez pas 
+        les plafonds annuels de vieillesse plafonnée (1 PMSS) et chômage (4 PMSS) après réintégration.
+      </p>
+    </div>
+
+    <h3>Réintégration fiscale</h3>
+    <p>
+      Le montant fiscal à réintégrer s'ajoute au <strong>net imposable</strong>. Le simulateur vous donne la ventilation :
+    </p>
+    
+    <ul>
+      <li><strong>Cotisations salariales non déductibles</strong> : Part salariale de l'excédent</li>
+      <li><strong>Contributions patronales imposables</strong> : Part employeur de l'excédent</li>
+    </ul>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Conseil paramétrage logiciel
+      </div>
+      <p class="pro-tip-content">
+        Créez des rubriques distinctes pour « Réintégration sociale excédent retraite/prévoyance » 
+        et « Réintégration fiscale excédent ». Cela facilitera le suivi et les justificatifs en cas de contrôle.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 7: Cas pratiques -->
+  <section id="cas-pratiques" class="section">
+    <h2>
+      <span class="section-number">7</span>
+      Cas pratiques
+    </h2>
+
+    <p>
+      Le simulateur intègre <strong>12 cas tests</strong> accessibles via le menu déroulant « Cas tests... ». 
+      Voici quelques scénarios courants :
+    </p>
+
+    <div class="example-box">
+      <div class="example-title">
+        🧪 T01 — Aucun excédent (contrôle de base)
+      </div>
+      <div class="example-content">
+        <p style="font-size: 14px; margin: 0 0 12px; color: var(--text);">
+          Salaire modeste avec cotisations normales. Objectif : vérifier qu'aucune réintégration n'apparaît.
+        </p>
+        <div class="example-row">
+          <span class="example-label">R_soc</span>
+          <span class="example-value">3 200 €</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Résultat</span>
+          <span class="example-value">0 € (pas d'excédent)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <div class="example-title">
+        🧪 T04 — Excédent social retraite
+      </div>
+      <div class="example-content">
+        <p style="font-size: 14px; margin: 0 0 12px; color: var(--text);">
+          Cotisations retraite élevées provoquant un dépassement du plafond social.
+        </p>
+        <div class="example-row">
+          <span class="example-label">R_soc (3 mois)</span>
+          <span class="example-value">12 000 €</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Retraite pat (3 mois)</span>
+          <span class="example-value">1 500 €</span>
+        </div>
+        <div class="example-row">
+          <span class="example-label">Excédent social</span>
+          <span class="example-value">~900 €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pro-tip">
+      <div class="pro-tip-title">
+        💼 Utilisation des cas tests
+      </div>
+      <p class="pro-tip-content">
+        Les cas tests permettent de valider le bon fonctionnement du simulateur et de vous familiariser 
+        avec différents scénarios. Utilisez-les pour comprendre l'impact des paramètres sur les résultats.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 8: Formules -->
+  <section id="formules" class="section">
+    <h2>
+      <span class="section-number">8</span>
+      Formules de calcul (BOSS)
+    </h2>
+
+    <p>
+      Les formules ci-dessous sont extraites du BOSS. Le simulateur les applique automatiquement.
+    </p>
+
+    <h3>Retraite supplémentaire — Plafond social</h3>
+    <div class="formula-box">
+      <div class="formula-title">Formule (part employeur uniquement)</div>
+      <div class="formula">Limite = max(5% PASS ; 5% × min(R_soc ; 5 × PASS)) − abondement PERCO/PERE-CO
+
+Composantes = Cotisations pat + PERE-OB pat + CET→retraite
+Excédent social = max(0 ; Composantes − Limite)</div>
+    </div>
+
+    <h3>Retraite supplémentaire — Plafond fiscal</h3>
+    <div class="formula-box">
+      <div class="formula-title">Formule (part salariale + employeur)</div>
+      <div class="formula">Limite = 8% × min(R_fisc ; 8 × PASS) − abondement − CET IR exonéré
+
+Composantes = Cotisations sal + Cotisations pat + PERE-OB + CET→retraite
+Excédent fiscal = max(0 ; Composantes − Limite)
+
+Ventilation :
+  Part salariale = Excédent × (Cot. sal / Composantes)
+  Part patronale = Excédent × (Cot. pat / Composantes)</div>
+    </div>
+
+    <h3>Prévoyance — Plafond social</h3>
+    <div class="formula-box">
+      <div class="formula-title">Formule (part employeur uniquement)</div>
+      <div class="formula">Limite brute = 6% PASS + 1,5% R_soc
+Limite finale = min(Limite brute ; 12% PASS)
+
+Composantes = Cotisations pat (santé + hors santé) + Participation CSE
+Excédent social = max(0 ; Composantes − Limite finale)</div>
+    </div>
+
+    <h3>Prévoyance — Plafond fiscal</h3>
+    <div class="formula-box">
+      <div class="formula-title">Formule (hors frais de santé patronaux)</div>
+      <div class="formula">Limite brute = 5% PASS + 2% R_fisc
+Limite finale = min(Limite brute ; 2% × 8 × PASS)
+
+Composantes = Cotisations sal + Cotisations pat hors FS + Participation CSE
+Excédent fiscal = max(0 ; Composantes − Limite finale)
+
+⚠️ Rappel fiscal : Part patronale frais de santé TOUJOURS imposable (hors plafond)</div>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-title">
+        ⚠️ Hypothèses et limites
+      </div>
+      <p class="warning-content">
+        Ce simulateur calcule les excédents <strong>annuels</strong> en appliquant les formules BOSS. 
+        En pratique, selon votre logiciel de paie et le paramétrage des cotisations (plafonnées/déplafonnées), 
+        la réintégration progressive peut différer légèrement. <strong>Vérifiez toujours avec votre DSN et votre expert-comptable.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- Mention légale -->
+  <div class="legal-notice">
+    <strong>Mentions légales et responsabilité</strong><br>
+    Ce simulateur est un outil d'aide à la décision destiné aux gestionnaires de paie. Les calculs sont effectués 
+    conformément aux règles du BOSS (Bulletin Officiel de la Sécurité Sociale) en vigueur, sous réserve des hypothèses 
+    et paramètres saisis. <strong>Koesio Data Solutions décline toute responsabilité</strong> en cas d'erreur de saisie, 
+    d'interprétation ou d'évolution de la législation. Il est recommandé de valider les résultats avec un expert-comptable 
+    ou juriste social avant toute mise en production. Ce simulateur ne constitue pas un conseil juridique ou fiscal.
+    <br><br>
+    <strong>Conformité RGPD :</strong> Aucune donnée personnelle n'est collectée ni transmise. Les saisies sont stockées 
+    localement dans le navigateur (localStorage) et peuvent être effacées à tout moment.
+    <br><br>
+    <strong>Version :</strong> v33_P2_TESTED — Dernière mise à jour : Février 2026
+  </div>
+
+</main>
+
+<script>
+  // Smooth scroll pour liens ancres
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

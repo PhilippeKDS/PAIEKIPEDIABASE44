@@ -1,0 +1,48 @@
+{
+  "title": "Glossaire RGDU 2026",
+  "intro": "Définitions rapides pour lecture client / gestionnaire de paie",
+  "items": [
+    "Glossaire RGDU 2026",
+    "Définitions rapides pour lecture client / gestionnaire de paie",
+    {
+      "terme": "RGDU",
+      "definition": "Réduction Générale Dégressive Unique : réduction de cotisations patronales applicable jusqu’à 3 SMIC (2026)."
+    },
+    {
+      "terme": "Tmin",
+      "definition": "Exonération minimale garantie : 2, 00% (0, 0200)."
+    },
+    {
+      "terme": "Tdelta",
+      "definition": "Part variable dépendant du périmètre de cotisations (notamment FNAL) et des situations particulières."
+    },
+    {
+      "terme": "P",
+      "definition": "Coefficient de puissance : 1, 75 en 2026."
+    },
+    {
+      "terme": "SMIC de référence",
+      "definition": "SMIC annualisé / proratisé selon temps de travail, présence, heures sup… et majorations éventuelles."
+    },
+    {
+      "terme": "Seuil 3 SMIC",
+      "definition": "Au-delà (ou égal) à 3×SMIC de référence : réduction nulle (coefficient forcé à 0)."
+    },
+    {
+      "terme": "PPV",
+      "definition": "Prime de Partage de la Valeur : incluse dans la rémunération de calcul de la réduction."
+    },
+    {
+      "terme": "ENA",
+      "definition": "Éléments Non Affectés par l’absence : exclus de la proratisation du SMIC (ex : 13e mois, IFC…)."
+    },
+    {
+      "terme": "Forfait jours >218",
+      "definition": "Nouveauté 2026 : ajouter les heures correspondant aux jours travaillés au-delà de 218."
+    },
+    {
+      "terme": "FNAL",
+      "definition": "Contribution employeur au logement : 0, 10% ou 0, 50% selon effectif/règles."
+    }
+  ]
+}

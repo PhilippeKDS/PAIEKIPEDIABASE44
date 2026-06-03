@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tests — Simulateur Montant Net Social (MNS) — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="./assets/img/logo-kds.png" alt="Koesio Data Solutions" />
+      <div class="title">
+        <strong>Simulateur Montant Net Social (MNS)</strong>
+        <span>Tests anti‑régression (jeux d’essai)</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="./index.html">Simulateur</a>
+      <a class="nav-link" href="./parameters.html">Paramètres</a>
+      <a class="nav-link" href="./references.html">Références</a>
+      <a class="nav-link" href="./help.html">Mode d’emploi</a>
+      <a class="nav-link active" href="./tests.html">Tests</a>
+    </nav>
+
+    <div class="top-actions">
+      <div class="action-group group-report">
+        <button class="btn-primary" id="btn-run-tests" title="Exécuter tous les tests">Exécuter les tests</button>
+      </div>
+      <div class="action-group group-io">
+        <button class="btn" id="btn-copy-report" title="Copier le rapport de tests">Copier le rapport</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" style="grid-template-columns: 1fr;">
+    <div class="card">
+      <h2>Jeux d’essai — anti‑régression</h2>
+      <div class="content">
+        <div class="note" style="margin-bottom:12px">
+          Cette page exécute une série de simulations avec des valeurs connues, puis compare le <b>MNS calculé</b> et quelques points de cohérence.
+          Elle sert à éviter les régressions (ex. « plus de résultats », « plus d’audit DSN », etc.).
+        </div>
+
+        <div class="row one" style="align-items:center">
+          <div class="field">
+            <label>Paramètres de test</label>
+            <div class="help">Les tests forcent temporairement : <b>seuil 20%</b> et <b>taux CSG 2,9%</b> pour garantir des résultats stables.</div>
+          </div>
+        </div>
+
+        <table class="table" style="margin-top:12px">
+          <thead>
+            <tr>
+              <th style="width:34px"></th>
+              <th>Test</th>
+              <th style="width:140px" class="right">Attendu</th>
+              <th style="width:140px" class="right">Obtenu</th>
+              <th style="width:110px" class="right">Écart</th>
+              <th style="width:220px">Détails</th>
+            </tr>
+          </thead>
+          <tbody id="tests-body"></tbody>
+        </table>
+
+        <div class="hint" id="tests-summary" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--
+  NOTE: en ouverture locale (file://), certains navigateurs considèrent chaque fichier comme une origine distincte.
+  On ne peut pas se baser sur contentDocument pour détecter que le simulateur est prêt.
+  On pose donc un flag côté parent via onload.
+-->
+<!-- Iframe invisible pour exécuter les calculs du simulateur sans dupliquer la logique -->
+<!--
+  NOTE: en ouverture locale (file://), certains navigateurs considèrent chaque fichier comme une origine distincte.
+  On ne peut pas se baser sur contentDocument pour détecter que le simulateur est prêt.
+  On pose donc un flag côté parent via onload.
+-->
+<!-- Iframe invisible pour exécuter les calculs du simulateur sans dupliquer la logique -->
+<!--
+  NOTE: en ouverture locale (file://), certains navigateurs considèrent chaque fichier comme une origine distincte.
+  On ne peut pas se baser sur contentDocument pour détecter que le simulateur est prêt.
+  On pose donc un flag côté parent via onload.
+-->
+<!-- Iframe invisible pour exécuter les calculs du simulateur sans dupliquer la logique -->
+<!-- NOTE: en ouverture locale (file://), on utilise le onload pour marquer le simulateur prêt. -->
+<iframe id="sim-frame" src="./index.html" onload="this.dataset.loaded='1'" style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; border:0;"></iframe>
+
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">Version <b>MNS-v4.3</b> • MAJ <b>06/02/2026</b></div>
+
+<div class="toast" id="toast"></div>
+<script src="./assets/js/tests.js"></script>
+</body>
+</html>

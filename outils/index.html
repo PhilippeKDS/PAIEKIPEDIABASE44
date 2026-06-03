@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PaieKipédia by KDS — Outils | Koesio Data Solutions</title>
+  <link rel="stylesheet" href="../assets/kds-ui.css" />
+  <link rel="icon" href="../assets/logo-koesio-data-solutions.png" />
+</head>
+<body class="page-hub">
+  <div class="kds-deco" aria-hidden="true">
+    <div class="kds-square kds-square--violet h-a"></div>
+    <div class="kds-square kds-square--coral h-b"></div>
+    <div class="kds-square kds-square--g2 h-c"></div>
+    <div class="kds-square kds-square--darkblue h-d"></div>
+    <div class="kds-square kds-square--g1 h-e"></div>
+    <div class="kds-square kds-square--g3 h-f"></div>
+    <div class="kds-square kds-square--blue h-g"></div>
+    <div class="kds-square kds-square--g2 h-h"></div>
+    <div class="kds-square kds-square--g3 h-i"></div>
+    <div class="kds-square kds-square--yellow h-j"></div>
+  </div>
+
+  <div class="kds-shell">
+    <header class="kds-topbar">
+      <div class="kds-topbar-inner">
+        <div class="kds-brand">
+          <a href="../">
+            <img class="kds-logo" src="../assets/logo-koesio-data-solutions.png" alt="Koesio Data Solutions" />
+          </a>
+          <div class="kds-breadcrumb"><span class="kds-header-title">PaieKipédia by KDS</span></div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <a class="kds-link kds-tooltip" href="../" data-tooltip="Retourner au Portail Paie.">Retour au portail</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="kds-main">
+      <div class="kds-container">
+        <section class="kds-card">
+          <div class="kds-card-inner">
+            <h1 class="kds-title kds-title--logo"><img class="kds-title-logo kds-title-logo--outils" src="../assets/logo-paieKipedia-outils.png" alt="PaieKipédia by KDS — Outils" /></h1>
+            <p class="kds-subtitle">
+              Accédez aux outils d'aide au contrôle, à l'analyse et aux simulateurs.
+            </p>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; align-items:center;">
+              <button class="kds-btn kds-btn--ghost kds-tooltip" type="button" id="reloadBtn" data-tooltip="Recharge la liste des outils depuis le fichier outils.json.">Recharger la liste</button>
+              <span class="kds-muted" id="lastUpdated" style="align-self:center;"></span>
+            </div>
+
+            <!-- Grille avec le bouton Simulateurs en premier -->
+            <div class="kds-grid" id="toolsGrid">
+              <!-- Bouton Simulateurs (toujours en premier) -->
+              <a class="kds-tile kds-tooltip" href="./simulateurs/" id="tileSimulateurs" data-tooltip="Simulateurs divers : PAS (taux neutre), heures supplémentaires, titres-restaurant, saisies sur salaire, gratification de stage, indemnités kilométriques, avantage logement.">
+                <div class="kds-tile-title">🧮 Simulateurs</div>
+                <div class="kds-tile-desc">PAS, heures sup, titres-restaurant, saisies, stages, indemnités km, avantage logement.</div>
+                <div class="kds-pill-row">
+                  <span class="kds-pill">Simulateurs</span>
+                  <span class="kds-pill kds-pill--new">Nouveau</span>
+                </div>
+              </a>
+              <!-- Les autres outils seront ajoutés ici par JavaScript -->
+            </div>
+
+            <p class="kds-muted" id="fallbackNote" style="margin-top:16px; display:none;">
+              Impossible de charger <code>outils.json</code>. Une liste de secours est affichée.
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="kds-footer">
+      <div class="kds-footer-inner">
+        <span>© 2026 Koesio Data Solutions</span>
+        <span>
+          <a class="kds-link" href="../">Portail Paie</a>
+          <span class="kds-muted"> • </span>
+          <span class="kds-muted"><span data-kds-version>...</span></span>
+        </span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../assets/disclaimer.js"></script>
+  <script>
+    // Fallback simplifié
+    const fallback = {
+      "title": "PaieKipédia by KDS", 
+      "updated": "2026-02-10", 
+      "items": [
+        {
+          "id": "montant-net-social", 
+          "name": "Montant Net Social", 
+          "description": "Calcul et lecture du Montant Net Social (MNS) – aide à la compréhension.", 
+          "url": "../outils/montant-net-social/", 
+          "tags": ["outil avancé"], 
+          "status": "production", 
+          "updated": "2026-02-01"
+        }, 
+        {
+          "id": "rgdu", 
+          "name": "RGDU", 
+          "description": "Aide au contrôle des mécanismes RGDU selon vos hypothèses.", 
+          "url": "../outils/rgdu/", 
+          "tags": ["outil avancé"], 
+          "status": "production", 
+          "updated": "2026-02-01"
+        }, 
+        {
+          "id": "reintegration-excedents", 
+          "name": "Réintégration des excédents", 
+          "description": "Réintégration sociale et fiscale des excédents (retraite suppl. & prévoyance).", 
+          "url": "../outils/reintegration-excedents/", 
+          "tags": ["outil avancé"], 
+          "status": "production", 
+          "updated": "2026-02-01"
+        }
+      ]
+    };
+
+    let currentData = null;
+
+    // Création d'un pill
+    function pill(text, cls="kds-pill") {
+      const s = document.createElement("span");
+      s.className = cls;
+      s.textContent = text;
+      return s;
+    }
+
+    // Affichage des outils (après le bouton Simulateurs déjà présent dans le HTML)
+    function render(data) {
+      const grid = document.getElementById("toolsGrid");
+      
+      // On garde le premier élément (Simulateurs) et on ajoute les autres après
+      const simulateursBtn = grid.firstElementChild;
+      grid.innerHTML = "";
+      grid.appendChild(simulateursBtn);
+      
+      const updated = document.getElementById("lastUpdated");
+      const when = data.updated ? `Dernière mise à jour : ${data.updated}` : "";
+      updated.textContent = when;
+
+      const items = data.items || [];
+
+      // Affichage des tuiles
+      items.forEach(item => {
+        const a = document.createElement("a");
+        a.className = "kds-tile kds-tooltip";
+        a.href = item.url || "#";
+        a.setAttribute("data-tooltip", (item.description || "Outil Paie"));
+        a.innerHTML = `
+          <div class="kds-tile-title">${item.name || "Outil"}</div>
+          <div class="kds-tile-desc">${item.description || ""}</div>
+        `;
+        const row = document.createElement("div");
+        row.className = "kds-pill-row";
+        
+        // Tags
+        (item.tags || []).forEach(t => row.appendChild(pill(t)));
+        
+        // Statut
+        if (item.status && item.status !== "production") {
+          row.appendChild(pill(item.status, "kds-pill kds-pill--new"));
+        }
+        
+        // Date de mise à jour
+        if (item.updated) {
+          row.appendChild(pill(`MAJ ${item.updated}`));
+        }
+        
+        a.appendChild(row);
+        grid.appendChild(a);
+      });
+
+      // Message si aucun outil
+      if (items.length === 0) {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.className = "kds-muted";
+        emptyMsg.style.marginTop = "20px";
+        emptyMsg.textContent = "Aucun outil avancé disponible pour le moment.";
+        grid.appendChild(emptyMsg);
+      }
+    }
+
+    // Chargement des données
+    async function load() {
+      const fallbackNote = document.getElementById("fallbackNote");
+      fallbackNote.style.display = "none";
+      
+      try {
+        const res = await fetch("./outils.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        currentData = await res.json();
+        render(currentData);
+      } catch (e) {
+        fallbackNote.style.display = "block";
+        currentData = fallback;
+        render(fallback);
+      }
+    }
+
+    // Rechargement
+    document.getElementById("reloadBtn").addEventListener("click", load);
+    
+    // Chargement initial
+    load();
+  </script>
+
+  <script data-tooltip-to-aria>
+    (function(){
+      var els = document.querySelectorAll('[data-tooltip]');
+      els.forEach(function(el){
+        if(el.getAttribute('aria-label') || el.getAttribute('aria-describedby')) return;
+        var t = el.getAttribute('data-tooltip');
+        if(t) el.setAttribute('aria-label', t);
+      });
+    })();
+  </script>
+
+  <script>
+    // Versioning centralisé depuis assets/version.json
+    fetch('../../assets/version.json').then(r=>r.json()).then(v=>{
+      var k = v['outils_hub'];
+      if(!k) return;
+      var els = document.querySelectorAll('[data-kds-version]');
+      els.forEach(function(el){
+        el.textContent = 'v' + k.version + ' — ' + k.date;
+      });
+    }).catch(function(){});
+  </script>
+</body>
+</html>

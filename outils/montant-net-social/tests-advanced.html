@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tests Non-Régressifs — Simulateur MNS — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <style>
+    .test-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-left: 4px solid #0055aa;
+    }
+    .stat-card .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #003366;
+    }
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-bar label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .filter-bar select {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .progress {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0055aa 0%, #0077cc 100%);
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+  </style>
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="./assets/img/logo-kds.png" alt="Koesio Data Solutions" />
+        <div class="title">
+      <div class="title">
+        <strong>Simulateur Montant Net Social (MNS)</strong>
+        <span>Tests non-régressifs enrichis (BOSS)</span>
+      </div>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="./index.html">Simulateur</a>
+      <a class="nav-link" href="./parameters.html">Paramètres</a>
+      <a class="nav-link" href="./references.html">Références</a>
+      <a class="nav-link" href="./help.html">Mode d'emploi</a>
+      <a class="nav-link active" href="./tests-advanced.html">Tests</a>
+    </nav>
+
+    <div class="top-actions">
+      <div class="action-group group-report">
+        <button class="btn-primary" id="btn-run-tests" title="Exécuter tous les tests">▶ Lancer les tests</button>
+      </div>
+      <div class="action-group group-io">
+        <button class="btn" id="btn-export-html" title="Export rapport HTML">HTML</button>
+        <button class="btn" id="btn-export-json" title="Export rapport JSON">JSON</button>
+        <button class="btn" id="btn-export-csv" title="Export rapport CSV">CSV</button>
+        <button class="btn" id="btn-copy-report" title="Copier le rapport texte">📋 Copier</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" style="grid-template-columns: 1fr;">
+    <div class="card">
+      <h2>Tests non-régressifs — Batterie enrichie BOSS</h2>
+      <div class="content">
+        
+        <div class="note" style="margin-bottom:16px">
+          <b>Système de tests enrichi :</b> Cette page exécute une batterie complète de tests automatisés avec traçabilité BOSS/DSN.
+          Chaque test valide un aspect spécifique du calcul MNS et référence les sources réglementaires.
+        </div>
+
+        <!-- Statistiques de la batterie de tests -->
+        <div class="test-stats" id="test-stats">
+          <div class="stat-card">
+            <div class="label">Tests disponibles</div>
+            <div class="value" id="stat-total">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Cas général</div>
+            <div class="value" id="stat-general">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Cas particulier</div>
+            <div class="value" id="stat-particulier">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Catégories</div>
+            <div class="value" id="stat-categories">—</div>
+          </div>
+        </div>
+
+        <!-- Barre de filtre -->
+        <div class="filter-bar">
+          <label>Filtrer :</label>
+          <select id="filter-category">
+            <option value="">Toutes les catégories</option>
+            <option value="base">Base (fonctionnalité minimale)</option>
+            <option value="ajouts">Ajouts (primes, HS, IJSS)</option>
+            <option value="deductions">Déductions (mutuelles, CSG)</option>
+            <option value="boss_reference">Référence BOSS</option>
+            <option value="edge_cases">Cas limites</option>
+          </select>
+
+          <select id="filter-type">
+            <option value="">Tous les types</option>
+            <option value="cas_general">Cas général</option>
+            <option value="cas_particulier">Cas particulier</option>
+          </select>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="progress" id="progress-container" style="display:none">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- Résultats -->
+        <div id="results-summary" style="margin-bottom:16px"></div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:34px"></th>
+              <th style="width:100px">Test ID</th>
+              <th>Nom & Description</th>
+              <th style="width:120px" class="right">MNS Attendu</th>
+              <th style="width:120px" class="right">MNS Obtenu</th>
+              <th style="width:80px" class="right">Écart</th>
+              <th style="width:80px">Durée</th>
+            </tr>
+          </thead>
+          <tbody id="tests-body"></tbody>
+        </table>
+
+        <div class="hint" id="tests-footer" style="margin-top:12px"></div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Iframe simulateur (invisible) -->
+<iframe id="sim-frame" src="./index.html" onload="this.dataset.loaded='1'" 
+  style="position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; border:0;"></iframe>
+
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">
+  Version <b>MNS-v4.3</b> • Tests <b>v1.0</b> • MAJ <b>11/02/2026</b>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Scripts -->
+<script src="./assets/js/test-suite.js"></script>
+<script src="./assets/js/test-runner.js"></script>
+<script src="./assets/js/tests-advanced.js"></script>
+
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+</body>
+</html>

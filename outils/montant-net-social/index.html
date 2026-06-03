@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulateur Montant Net Social (MNS) — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="../../assets/kds-tokens.css">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="../../assets/logo-koesio-data-solutions.png" alt="Koesio Data Solutions" />
+        <div class="title">
+          <strong>Simulateur Montant Net Social (MNS)</strong>
+          <span>Analyse bulletin Sage (vérification du paramétrage)</span>
+        </div>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link active" href="./index.html">Simulateur</a>
+      <a class="nav-link" href="./parameters.html">Paramètres</a>
+      <a class="nav-link" href="./references.html">Références</a>
+      <a class="nav-link" href="./help.html">Mode d’emploi</a>
+      <a class="nav-link" href="./tests-advanced.html">Tests</a>
+    </nav>
+
+    <div class="top-actions top-actions-left">
+      <div class="action-group group-io">
+        <button class="btn" id="btn-import-json" title="Importer une saisie depuis un fichier JSON">📥 Import</button>
+        <input type="file" id="file-import-json" accept="application/json" hidden />
+        <button class="btn" id="btn-export-json" title="Exporter la saisie au format JSON">💾 JSON</button>
+        <button class="btn" id="btn-export-csv" title="Exporter la saisie au format CSV">📊 CSV</button>
+        <button class="btn" id="btn-export-xls" title="Exporter la saisie au format Excel">📈 Excel</button>
+      </div>
+
+      <div class="action-group group-report">
+        <button class="btn-primary" id="btn-export-pdf" title="Générer un PDF (tout en un)">🖨️ PDF</button>
+      </div>
+
+      <div class="action-group group-danger">
+        <button class="btn-danger" id="btn-reset" title="🔄 Reset les valeurs">Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+</header>
+<nav aria-label="Fil d'Ariane" style="
+  font-size:12px;color:var(--kds-muted,#5b667a);
+  padding:5px 18px;background:var(--kds-surface,#fff);
+  border-bottom:1px solid var(--kds-border,rgba(0,0,0,.08));
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+  <a href="#" id="bc-portail" style="color:inherit;text-decoration:underline dotted;">PaieKipédia</a>
+  <span aria-hidden="true">›</span>
+  <a href="#" id="bc-outils" style="color:inherit;text-decoration:underline dotted;">Outils Paie</a>
+  <span aria-hidden="true">›</span>
+  <span style="color:var(--kds-text,#1b1e28);font-weight:600;">Montant Net Social</span>
+</nav>
+<div id="kds-data-date" style="text-align:center;font-size:12px;color:var(--muted,#888);padding:4px 0;background:var(--surface,#fff);border-bottom:1px solid var(--border,#eee);">
+  Valeurs — chargement…
+</div>
+
+<main>
+  <div class="grid">
+    <!-- Saisie -->
+    <div class="card">
+      <h2>Saisie bulletin (Sage) — regroupée par blocs DSN (référence)</h2>
+      <div class="content">
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Contexte & comparaison</div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Cas particulier<span class="tip" data-tooltip="En cas général, le socle MNS est la Base PAS (98960+98970) + la Part non imposable (98941+98911). En cas particulier (CDD ≤ 2 mois ou RNF négative), le socle s’appuie sur RNF + Indu (type 03).">ⓘ</span></label>
+              <select id="case-toggle">
+                <option value="standard">Cas général : socle = Base PAS + Part non imposable</option>
+                <option value="exception">CDD ≤ 2 mois OU RNF négative : socle = RNF + Indu</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>MNS affiché sur le bulletin</label>
+              <input id="mns-bulletin" type="number" inputmode="decimal" step="0.01" placeholder="Ex. 684,87" />
+              
+            </div>
+          </div>
+
+          <div class="help span2">Le cas choisi modifie le socle et les zones à renseigner.</div>
+
+          <div class="help span2"></div>
+
+          <div class="hint" style="margin-top:10px">
+            Les paramètres (seuil d’alerte, taux CSG non déductible) sont dans l’onglet <b>Paramètres</b>.
+          </div>
+
+          <div class="note" style="margin-top:10px"><b>Important :</b> les numéros de rubriques affichés dans ce simulateur concernent <b>Sage Paie</b> et correspondent au <b>Plan de Paie Sage standard</b>. Chaque utilisateur doit vérifier qu’il s’agit des bonnes rubriques dans son environnement (paramétrage spécifique, autres rubriques possibles pour la même information).</div>
+</div>
+
+        <!-- S21.G00.50 -->
+        <div class="section" id="sec-50">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.50</span> — Revenu fiscal</div>
+            <div class="hint" id="hint-50">Socle (cas général) • Reconstitution via bulletin.</div>
+          </div>
+
+          <div id="rnf-note" class="note" style="display:none"><b>RNF</b> : reconstitution via <b>Net imposable (NETIMPO)</b> + régularisations.</div>
+
+          <div id="rnf-wrap" class="row hidden" style="margin-top:10px">
+            <div class="field">
+              <label>Net imposable (NETIMPO) <span class="badge">Sage</span></label>
+              <input id="netimpo" type="number" inputmode="decimal" step="0.01" placeholder="Constante NETIMPO" />
+            </div>
+            <div class="field">
+              <label>Régularisations RNF <span class="badge">bulletin</span></label>
+              <input id="rnf-regul" type="number" inputmode="decimal" step="0.01" placeholder="0,00 si non concerné" />
+            </div>
+          </div>
+
+          <hr class="sep" />
+          <div id="socle-general-wrap" class="row one">
+            <div class="field">
+              <label>Base Prélèvement à la source <span class="badge">98960</span> <span class="badge">98970</span> <span class="badge">S21.G00.50.013</span></label>
+              <div class="row" style="gap:10px">
+                <input id="pas-98960" type="number" inputmode="decimal" step="0.01" placeholder="98960" />
+                <input id="pas-98970" type="number" inputmode="decimal" step="0.01" placeholder="98970" />
+              </div>
+              
+            </div>
+
+            <div class="field" style="margin-top:10px">
+              <label>Part non imposable <span class="badge">98941</span> <span class="badge">98911</span> <span class="badge">S21.G00.50.011</span></label>
+              <div class="row" style="gap:10px">
+                <input id="pni-98941" type="number" inputmode="decimal" step="0.01" placeholder="98941" />
+                <input id="pni-98911" type="number" inputmode="decimal" step="0.01" placeholder="98911" />
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+        <!-- S21.G00.56 -->
+        <div class="section hidden" id="sec-56">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.56</span> — Régularisation</div>
+            <div class="hint">Socle (cas CDD court / RNF négative) • Indu type 03.</div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Indu <span class="badge">type 03</span> <span class="badge">S21.G00.56.002</span></label>
+              <input id="indu" type="number" inputmode="decimal" step="0.01" placeholder="0,00 si non concerné" />
+              <div class="help">À renseigner uniquement si vous êtes dans le cas particulier (socle = RNF + Indu).</div>
+            </div>
+            <div class="field"></div>
+          </div>
+        </div>
+
+        <!-- S21.G00.52 -->
+        <div class="section" id="sec-52">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.52</span> — Prime / gratification / indemnité</div>
+            
+          </div>
+
+          <table class="table" style="margin-top:10px">
+            <thead>
+              <tr>
+                <th style="width:70px">Type</th>
+                <th>Libellé</th>
+                <th style="width:170px" class="right">Montant bulletin</th>
+              </tr>
+            </thead>
+            <tbody id="primes-body"></tbody>
+          </table>
+        </div>
+
+        <!-- S21.G00.58 -->
+        <div class="section" id="sec-58">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.58</span> — Éléments de revenu calculés en net</div>
+            
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>HS/HC exonérées fiscalement <span class="badge">type 01</span> <span class="badge">79900</span></label>
+              <input id="hs-exo" type="number" inputmode="decimal" step="0.01" placeholder="Montant rubrique 79900" />
+              
+            </div>
+            <div class="field"></div>
+          </div>
+        </div>
+
+        <!-- S21.G00.54 -->
+        <div class="section" id="sec-54">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.54</span> — Cotisation individuelle</div>
+            
+          </div>
+
+          <div class="row one">
+            <div class="field">
+              <label>Parts patronales de mutuelles <span class="badge">type 92</span> <span class="badge">S21.G00.54.001</span></label>
+              <input id="mutuelles-pp" type="number" inputmode="decimal" step="0.01" placeholder="Total parts patronales mutuelle" />
+            </div>
+
+            <div class="field" style="margin-top:10px">
+              <label>Abondements plan d’épargne <span class="badge">14/15/16</span> <span class="badge">S21.G00.54.001</span></label>
+              <input id="abondements-epargne" type="number" inputmode="decimal" step="0.01" placeholder="Somme des abondements" />
+            </div>
+          </div>
+        </div>
+
+        <!-- S21.G00.78 -->
+        <div class="section" id="sec-78">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span><span class="mono">S21.G00.78</span> — Base assujettie</div>
+            
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Assiette CSG <span class="badge">code 04</span> <span class="badge">S21.G00.78.001</span></label>
+              <input id="assiette-csg" type="number" inputmode="decimal" step="0.01" placeholder="Assiette CSG (code 04)" />
+            </div>
+            <div class="field">
+              <label>PPV placée <span class="badge">type 906</span> <span class="badge">S21.G00.52.001</span></label>
+              <input id="ppv-placee" type="number" inputmode="decimal" step="0.01" placeholder="0,00 si non concerné" />
+            </div>
+          </div>
+
+          
+        </div>
+
+        
+
+        <div class="section" id="ijss-left">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>IJSS (arrêt de travail)</div>
+          </div>
+          <div class="row one">
+            <div class="field">
+              <label>IJSS nettes <span class="badge">Sage 84100</span><span class="tip" data-tooltip="À saisir uniquement en cas de subrogation employeur. Renseignez le montant des IJSS NETTES tel qu’il apparaît sur le bulletin.">ⓘ</span></label>
+              <input id="ijss-net" type="number" inputmode="decimal" step="0.01" placeholder="0,00" />
+            </div>
+          </div>
+        </div>
+
+<div class="footer">
+          Le détail du calcul (socle + ajouts − déductions) est affiché à droite pour expliquer le résultat.
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Résultats -->
+    <div class="card">
+      <h2>Résultats & diagnostic</h2>
+      <div class="subnote" id="rounding-info"></div>
+      <div class="content">
+        <div class="kpi">
+          <div class="box">
+            <div class="t">MNS calculé (depuis bulletin)</div>
+            <div class="v" id="mns-estime">—</div>
+            <div class="hint" id="socle-mode">—</div>
+          </div>
+          <div class="box">
+            <div class="t">Écart vs MNS du bulletin</div>
+            <div class="v" id="ecart-eur">—</div>
+            <div class="hint" id="ecart-pct">—</div>
+          </div>
+        </div>
+
+        <div class="status">
+          <span class="sDot" id="status-dot"></span>
+          <span class="badge" id="status-label">—</span>
+        </div>
+
+        
+        <div class="actions" style="justify-content:flex-start; margin-top:10px">
+          <button class="btn" id="btn-copy-summary" type="button">Copier un résumé</button>
+        </div>
+<div class="note" id="alert" style="margin-top:12px">
+          Saisissez les éléments du bulletin et le MNS imprimé pour vérifier le paramétrage.
+        </div>
+
+        <hr class="sep" />
+
+        <div class="section">
+          <div class="section-head" style="align-items:center">
+            <div class="tag"><span class="dot"></span>Mode audit DSN — mapping blocs attendus</div>
+            <label class="switch" title="Afficher/masquer le mapping DSN">
+              <input type="checkbox" id="audit-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="hint" style="margin-bottom:10px">
+            Grille de lecture pour vérifier la cohérence entre <b>bulletin</b>, <b>rubriques Sage</b> et <b>blocs DSN</b> (ex. <span class="mono">S21.G00.50</span>, <span class="mono">S21.G00.52</span>…).
+            Les rubriques exactes peuvent varier selon le paramétrage.
+          </div>
+
+          <div id="dsn-audit" class="audit" style="display:none">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:34px"></th>
+                  <th style="width:130px">Bloc DSN</th>
+                  <th style="width:160px">Rubrique / type</th>
+                  <th>Libellé</th>
+                  <th style="width:170px" class="right">Valeur attendue</th>
+                  <th style="width:220px">Source (simulateur)</th>
+                </tr>
+              </thead>
+              <tbody id="dsn-audit-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Détail du calcul — Étapes</div>
+            <div class="hint">Socle + ajouts − déductions (référence URSSAF).</div>
+          </div>
+          <div class="hint" style="margin-bottom:10px">
+            Chaque étape indique ce qu’elle fait et rappelle la formule avec les valeurs de la simulation en cours.
+          </div>
+          <div id="steps"></div>
+        </div>
+
+
+        
+
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">Version <b>MNS-v4.3</b> • MAJ <b>06/02/2026</b></div>
+
+<div class="toast" id="toast"></div>
+<script src="./assets/js/app.js"></script>
+  <script src="./assets/js/calculator.js"></script>
+  <!-- wizard.js supprimé (fonctionnalité non implémentée) --></script>
+
+  <script>
+    // Injection des URLs depuis config.js (PaieKipédia)
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+
+  <script>
+    // Affichage date de mise à jour des valeurs
+    fetch('./assets/js/meta.json').then(r=>r.json()).then(m=>{
+      var el = document.getElementById('kds-data-date');
+      if(el && m.data_updated) el.textContent = 'Valeurs ' + m.annee + ' — mises à jour le ' + m.data_updated + ' • Outil indicatif, à vérifier en logiciel de paie';
+    }).catch(()=>{});
+  </script>
+
+  <script>
+    // Fil d'Ariane — injection URLs
+    (function(){{
+      var cfg = window.PAIEKIPEDIA_CONFIG || {{}};
+      var p = document.getElementById('bc-portail');
+      var o = document.getElementById('bc-outils');
+      if(p) p.href = cfg.URL_PORTAIL || '../../';
+      if(o) o.href = cfg.URL_OUTILS   || '../';
+    }})();
+  </script>
+</body>
+</html>

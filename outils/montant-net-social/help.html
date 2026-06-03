@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mode d'emploi — Simulateur MNS — Koesio Data Solutions</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="../../assets/config.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <a href="#" id="linkLogoOutils" title="Retour au portail des outils" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <img src="./assets/img/logo-kds.png" alt="Koesio Data Solutions" />
+        <div class="title">
+      <div class="title">
+        <strong>Simulateur Montant Net Social (MNS)</strong>
+        <span>Mode d'emploi (analyse bulletin)</span>
+      </div>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="./index.html">Simulateur</a>
+      <a class="nav-link" href="./parameters.html">Paramètres</a>
+      <a class="nav-link" href="./references.html">Références</a>
+      <a class="nav-link active" href="./help.html">Mode d'emploi</a>
+      <a class="nav-link" href="./tests-advanced.html">Tests</a>
+    </nav>
+
+    <div class="top-actions">
+      <a class="btn" href="./index.html">← Retour au simulateur</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid" style="grid-template-columns: 1fr;">
+    
+    <!-- AVERTISSEMENT IMPORTANT -->
+    <div class="card" style="border: 2px solid #d49b00; background: #fffbf0;">
+      <h2 style="color: #d49b00;">⚠️ Avertissement important — À lire avant utilisation</h2>
+      <div class="content">
+        <div class="note" style="background: white; border-left: 4px solid #d49b00; padding: 16px;">
+          <p style="margin: 0 0 12px 0; font-weight: bold; font-size: 15px;">
+            Outil professionnel d'aide à la vérification — Pas de garantie de conformité
+          </p>
+          <p style="margin: 0 0 10px 0;">
+            Ce simulateur est un <b>outil d'aide au contrôle</b> destiné aux professionnels de la paie. 
+            Il reconstitue le Montant Net Social à partir des éléments du bulletin pour détecter d'éventuelles 
+            incohérences de paramétrage.
+          </p>
+          <p style="margin: 0 0 10px 0;">
+            <b>⚠️ Il ne se substitue pas</b> à :
+          </p>
+          <ul style="margin: 0 0 10px 18px;">
+            <li>Un moteur de paie complet</li>
+            <li>Une validation officielle URSSAF</li>
+            <li>Un audit de conformité certifié</li>
+            <li>Les textes réglementaires (BOSS, DSN)</li>
+          </ul>
+          <p style="margin: 0; font-size: 13px; color: #666;">
+            Les résultats ont une <b>valeur indicative</b> et doivent être <b>systématiquement vérifiés</b> 
+            dans votre environnement de paie. Koesio Data Solutions ne saurait être tenue responsable 
+            des décisions prises sur la base des seules valeurs issues des simulations.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📖 Objectif du simulateur</h2>
+      <div class="content">
+        <div class="note">
+          Vérifier que le <b>Montant Net Social</b> calculé par le paramétrage de paie Sage est cohérent avec les règles URSSAF :
+          <br><br>
+          <b>Principe :</b> On reconstitue le MNS à partir des éléments du bulletin, puis on compare avec le 
+          <b>MNS affiché sur le bulletin</b> pour détecter les écarts.
+        </div>
+        <div class="hint" style="margin-top:12px">
+          <b>Public cible :</b> Consultants paie KDS, responsables paie clients (utilisation avancée), équipes contrôle interne
+        </div>
+        <div class="hint" style="margin-top:8px">
+          <b>Périmètre :</b> Analyse bulletin uniquement (pas de saisie DSN directe pour le moment)
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🚀 Guide d'utilisation rapide (3 minutes)</h2>
+      <div class="content">
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Étape 1 : Choisir le cas</div>
+          </div>
+          <ul class="hint" style="margin:0;padding-left:18px">
+            <li><b>Cas général</b> (CDI, CDD > 2 mois) :<br>
+                Socle = <b>Base Prélèvement à la source</b> + <b>Part non imposable</b></li>
+            <li><b>Cas particulier</b> (CDD ≤ 2 mois OU RNF négative) :<br>
+                Socle = <b>RNF</b> + <b>Indu</b> (type 03)</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Étape 2 : Saisir les montants du bulletin</div>
+          </div>
+          <ol class="hint" style="margin:0;padding-left:18px">
+            <li>Saisir le <b>MNS affiché sur le bulletin</b> (champ de comparaison en haut)</li>
+            <li>Renseigner les montants dans chaque bloc DSN (S21.G00.50, S21.G00.52, etc.)</li>
+            <li>Les rubriques Sage sont indiquées quand elles sont connues (ex : <b>79900</b> pour les HS/HC exo)</li>
+          </ol>
+          
+          <div class="note" style="margin:12px 0; background: #fffbf0; border-left: 4px solid #d49b00;">
+            <b>⚠️ Important — Rubriques Sage :</b> Les numéros de rubriques indiqués correspondent au 
+            <b>Plan de Paie Sage standard</b>. Il appartient à chaque utilisateur de vérifier qu'il s'agit 
+            du bon numéro dans son environnement (paramétrages spécifiques, plan de paie adapté, autres 
+            rubriques possibles pour la même information, etc.).
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Étape 3 : Analyser le résultat</div>
+          </div>
+          <ul class="hint" style="margin:0;padding-left:18px">
+            <li><b>MNS calculé</b> : reconstitution à partir des éléments saisis</li>
+            <li><b>Écart vs bulletin</b> : différence en € et en %</li>
+            <li><b>Statut</b> : OK (écart < 20%) ou Alerte (écart ≥ 20%, paramétrable)</li>
+            <li><b>Détail du calcul</b> : Socle + Ajouts − Déductions (étapes explicites)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Correspondance Bulletin → Simulateur</h2>
+      <div class="content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 180px">Bloc / Donnée DSN</th>
+              <th>Ce qu'on saisit</th>
+              <th>Remarques / Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">S21.G00.50.002</span><br>RNF</td>
+              <td>Net imposable (NETIMPO) + régularisations</td>
+              <td>RNF reconstituée via bulletin. <b>Cas particulier uniquement</b>.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.50.013</span><br>Base PAS</td>
+              <td><b>98960 + 98970</b></td>
+              <td>Socle <b>cas général</b> (avec Part non imposable).</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.50.011</span><br>Part non imposable</td>
+              <td><b>98941 − 98911</b></td>
+              <td>Complément du socle en cas général.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.56.002</span><br>Indu (type 03)</td>
+              <td>Montant Indu</td>
+              <td>À saisir uniquement en <b>cas particulier</b>.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.52</span><br>Primes</td>
+              <td>Montants par type URSSAF (002, 007, 008...)</td>
+              <td>Ajouter seulement les lignes concernées (12 types disponibles).</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.58.003</span><br>HS/HC exo (type 01)</td>
+              <td>Rubrique Sage <b>79900</b></td>
+              <td>Heures supplémentaires/complémentaires exonérées fiscalement.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.58.003</span><br>IJSS (type 10)</td>
+              <td>Rubrique Sage <b>84100</b></td>
+              <td><b>Uniquement en cas de subrogation employeur</b>. Sinon laisser vide.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.54.001</span><br>Mutuelles PP (type 92)</td>
+              <td>Total parts patronales mutuelles</td>
+              <td>Une seule zone (regroupée). Contributions employeur frais de santé.</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.78.001</span><br>Assiette CSG (code 04)</td>
+              <td>Montant Assiette CSG</td>
+              <td>Utilisée pour calculer la CSG non déductible (× 2,9%).</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.52.001</span><br>PPV placée (type 906)</td>
+              <td>Montant PPV placée</td>
+              <td>Réduit l'assiette CSG (si applicable).</td>
+            </tr>
+            <tr>
+              <td><span class="mono">S21.G00.54.001</span><br>Abondements (types 14-16)</td>
+              <td>Total abondements PEE/PERCO/PERE</td>
+              <td>Réduit l'assiette CSG (si applicable).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note" style="margin-top:14px">
+          <b>💡 Conseil :</b> Pour la référence métier détaillée (règles BOSS, formules de calcul, 
+          références DSN précises), consultez la page <b>Références</b> ou le document 
+          <b>Guide de conformité BOSS</b> (fourni avec le simulateur).
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Paramètres & Fonctionnalités</h2>
+      <div class="content">
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Paramètres configurables</div>
+          </div>
+          <ul class="hint" style="margin:0;padding-left:18px">
+            <li><b>Seuil d'alerte</b> : Par défaut 20% (modifiable dans l'onglet Paramètres). 
+                Détermine si un écart est acceptable (OK) ou nécessite une investigation (Alerte).</li>
+            <li><b>Taux CSG non déductible</b> : Par défaut 2,9% (modifiable en cas d'évolution réglementaire URSSAF).</li>
+            <li><b>Mode d'arrondi</b> : Final (arrondi uniquement sur le résultat) ou par étape (arrondi à chaque calcul intermédiaire).</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Exports disponibles</div>
+          </div>
+          <ul class="hint" style="margin:0;padding-left:18px">
+            <li><b>📄 CSV</b> : Export des saisies + résultats (traçabilité, archivage)</li>
+            <li><b>📊 Excel</b> : Export formaté pour analyse approfondie</li>
+            <li><b>💾 JSON</b> : Sauvegarde complète de la simulation (partage, reproduction exacte)</li>
+            <li><b>📋 Copier résumé</b> : Copie un texte formaté prêt à coller dans Teams, email ou ticket</li>
+            <li><b>🖨️ PDF</b> : Génère un rapport complet → Imprimer → Enregistrer en PDF</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="tag"><span class="dot"></span>Mode audit DSN (avancé)</div>
+          </div>
+          <div class="hint">
+            Dans le panneau <b>Résultats & diagnostic</b>, activez le toggle <b>Mode audit DSN</b> pour afficher 
+            un mapping détaillé des <b>blocs DSN attendus</b> (ex: <span class="mono">S21.G00.50</span>, 
+            <span class="mono">S21.G00.52</span>, <span class="mono">S21.G00.54</span>…) avec :
+            <ul style="margin: 8px 0 0 18px;">
+              <li>La valeur calculée par le simulateur</li>
+              <li>La source (rubriques Sage utilisées)</li>
+              <li>Le statut de cohérence (✅ OK, ⚠️ Alerte, ⛔ Manquant)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hint" style="margin-top: 12px; background: #f0f9ff; border-left: 4px solid #3fc0f0;">
+          <b>ℹ️ Confidentialité :</b> Tous les paramètres et données sont enregistrés <b>localement</b> 
+          dans votre navigateur. <b>Aucune donnée n'est envoyée</b> vers un serveur externe.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ℹ️ Cas particulier : IJSS (Indemnités Journalières)</h2>
+      <div class="content">
+        <div class="note" style="background: #f0f9ff; border-left: 4px solid #3fc0f0;">
+          <p style="margin: 0 0 10px 0; font-weight: bold;">
+            Subrogation employeur : Saisir les IJSS
+          </p>
+          <p style="margin: 0 0 10px 0;">
+            Si vous êtes en <b>subrogation employeur</b>, saisissez le <b>montant d'IJSS tel qu'il apparaît 
+            sur le bulletin</b> (rubrique Sage <b>84100</b>, bloc DSN <span class="mono">S21.G00.58.003</span> type 10). 
+            Ces IJSS sont prises en compte dans le calcul du Montant Net Social.
+          </p>
+          <p style="margin: 0; font-weight: bold;">
+            Hors subrogation : Ne rien saisir
+          </p>
+          <p style="margin: 0;">
+            Si les IJSS sont versées <b>directement au salarié</b> par la Sécurité Sociale (hors subrogation), 
+            <b>ne pas ajouter les IJSS</b> dans le simulateur pour éviter un double comptage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border: 2px solid #d9363e; background: #fff5f5;">
+      <h2 style="color: #d9363e;">⚖️ Mentions légales — Limitation de responsabilité</h2>
+      <div class="content">
+        <div class="note" style="background: white; border-left: 4px solid #d9363e; padding: 16px; line-height: 1.6;">
+          <p style="margin: 0 0 14px 0; font-weight: bold; font-size: 15px;">
+            AVERTISSEMENT JURIDIQUE — À LIRE ATTENTIVEMENT
+          </p>
+          
+          <p style="margin: 0 0 12px 0; font-weight: bold;">1. Nature de l'outil</p>
+          <p style="margin: 0 0 12px 0;">
+            Ce simulateur est mis à disposition <b>à titre gratuit</b> par Koesio Data Solutions, 
+            comme <b>outil d'aide au contrôle et à la compréhension</b> des mécanismes de calcul 
+            du Montant Net Social (MNS). Il s'agit d'un outil professionnel destiné aux consultants 
+            paie et aux responsables paie clients avertis.
+          </p>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">2. Conception et maintenance</p>
+          <p style="margin: 0 0 12px 0;">
+            Le simulateur est conçu et maintenu avec le plus grand soin, en cohérence avec les règles 
+            et hypothèses de calcul retenues dans nos travaux d'intégration et de mise en œuvre des 
+            logiciels de paie Sage. Il s'appuie sur les références BOSS (Base documentaire de la 
+            Sécurité Sociale) et les cahiers techniques DSN.
+          </p>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">3. Limites et variabilité des résultats</p>
+          <p style="margin: 0 0 8px 0;">
+            Les résultats peuvent toutefois <b>varier significativement</b> selon le contexte client, 
+            notamment en fonction de :
+          </p>
+          <ul style="margin: 0 0 12px 18px;">
+            <li>Paramétrages spécifiques du logiciel de paie</li>
+            <li>Statuts particuliers des salariés (apprentis, stagiaires, etc.)</li>
+            <li>Exonérations applicables (zones franches, etc.)</li>
+            <li>Taux dérogatoires ou spécifiques</li>
+            <li>Conventions collectives ou accords d'entreprise</li>
+            <li>Évolutions réglementaires (URSSAF, DSN, fiscales)</li>
+            <li>Plans de paie adaptés ou personnalisés</li>
+          </ul>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">4. Valeur indicative des résultats</p>
+          <p style="margin: 0 0 12px 0;">
+            En conséquence, les résultats produits par le simulateur ont une <b>valeur strictement 
+            indicative</b>. Ils <b>ne constituent en aucun cas</b> :
+          </p>
+          <ul style="margin: 0 0 12px 18px;">
+            <li>Un bulletin de paie officiel</li>
+            <li>Une validation de conformité réglementaire</li>
+            <li>Un avis juridique ou un conseil en paie</li>
+            <li>Une certification ou un audit officiel</li>
+            <li>Une garantie d'exactitude dans tous les contextes</li>
+          </ul>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">5. Obligation de vérification</p>
+          <p style="margin: 0 0 12px 0;">
+            Les résultats du simulateur <b>doivent impérativement être contrôlés et validés</b> dans 
+            votre environnement de paie réel, selon vos procédures internes de contrôle qualité, et en 
+            faisant appel si nécessaire à un expert-comptable ou à un juriste spécialisé en droit social.
+          </p>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">6. Exclusion de responsabilité</p>
+          <p style="margin: 0 0 12px 0;">
+            Koesio Data Solutions <b>ne saurait être tenue responsable</b>, directement ou indirectement, 
+            des décisions, déclarations sociales, déclarations fiscales, traitements de paie ou de toute 
+            autre action effectuée sur la base des seules valeurs issues des simulations. L'utilisateur 
+            reconnaît utiliser le simulateur sous sa propre responsabilité et s'engage à effectuer toutes 
+            les vérifications nécessaires avant toute prise de décision.
+          </p>
+
+          <p style="margin: 0 0 12px 0; font-weight: bold;">7. Recommandations impératives</p>
+          <ul style="margin: 0 0 12px 18px;">
+            <li><b>Toujours</b> vérifier les résultats avec un bulletin de paie réel produit par votre logiciel</li>
+            <li><b>Consulter</b> la documentation BOSS (boss.gouv.fr) et les cahiers techniques DSN en cas de doute</li>
+            <li><b>Faire valider</b> les paramétrages par un expert paie ou un cabinet spécialisé</li>
+            <li><b>Mettre à jour</b> le simulateur lors des évolutions réglementaires (DSN, URSSAF, fiscales)</li>
+            <li><b>Archiver</b> les exports de simulations pour traçabilité et audit</li>
+          </ul>
+
+          <p style="margin: 0; font-size: 13px; color: #666; font-style: italic;">
+            En utilisant ce simulateur, vous reconnaissez avoir lu, compris et accepté les présentes 
+            mentions légales et limitations de responsabilité.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="footer" style="text-align:center; max-width:1200px; margin:16px auto 0">
+  <div style="font-weight: bold;">Version <b>MNS-v4.3</b> • MAJ <b>11/02/2026</b></div>
+  <div style="font-size: 12px; color: #666; margin-top: 4px;">
+    © 2026 Koesio Data Solutions • Outil professionnel • Usage interne et clients
+  </div>
+</div>
+
+<script src="./assets/js/calculator.js"></script>
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+</body>
+</html>

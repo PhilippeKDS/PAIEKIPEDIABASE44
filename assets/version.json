@@ -1,0 +1,30 @@
+{
+  "portail": {
+    "version": "2.2",
+    "date": "2026-06-01"
+  },
+  "bareme": {
+    "version": "3.2",
+    "date": "2026-06-01"
+  },
+  "outils_hub": {
+    "version": "2.5",
+    "date": "2026-06-01"
+  },
+  "rgdu": {
+    "version": "3.2.0",
+    "date": "2026-06-01"
+  },
+  "mns": {
+    "version": "1.0",
+    "date": "2026-02-01"
+  },
+  "reintegration": {
+    "version": "33.2",
+    "date": "2026-02-08"
+  },
+  "simulateurs": {
+    "version": "1.2",
+    "date": "2026-04-19"
+  }
+}

@@ -1,0 +1,57 @@
+/* ============================================================
+   PaieKipédia — Design Tokens KDS
+   Source unique des couleurs et valeurs de marque Koesio.
+   Inclure AVANT tout autre CSS dans chaque sous-projet.
+
+   Usage : <link rel="stylesheet" href="../../assets/kds-tokens.css" />
+   ============================================================ */
+
+:root {
+  /* ── Couleurs de marque KDS ── */
+  --kds-violet:   #6e398e;   /* violet principal */
+  --kds-coral:    #e94b57;   /* coral / accent rouge */
+  --kds-blue:     #41c0f0;   /* bleu clair */
+  --kds-darkblue: #2f52a0;   /* bleu foncé / marine */
+  --kds-pink:     #f29fc5;   /* rose clair */
+  --kds-yellow:   #ffd618;   /* jaune */
+
+  /* ── Aliases sémantiques (usage dans les composants) ── */
+  --kds-primary:  var(--kds-violet);
+  --kds-accent:   var(--kds-coral);
+  --kds-info:     var(--kds-blue);
+  --kds-secondary:var(--kds-darkblue);
+
+  /* ── États fonctionnels ── */
+  --kds-ok:       #1fae5a;
+  --kds-warn:     #d49b00;
+  --kds-error:    #d9363e;
+
+  /* ── Surfaces & fonds ── */
+  --kds-bg:       #f6f7fb;
+  --kds-bg-soft:  #faf7fc;
+  --kds-surface:  #ffffff;
+
+  /* ── Texte ── */
+  --kds-text:     #1b1e28;
+  --kds-muted:    #5b667a;
+
+  /* ── Bordures & ombres ── */
+  --kds-border:   rgba(15, 23, 42, .10);
+  --kds-shadow:   0 10px 25px rgba(15, 23, 42, .08);
+  --kds-focus:    0 0 0 4px rgba(65, 192, 240, .28);
+
+  /* ── Rayons ── */
+  --kds-radius:   16px;
+  --kds-radius-lg:22px;
+  --kds-radius-md:12px;
+
+  /* ── Typographie ── */
+  --kds-font: "Be Vietnam Pro", ui-sans-serif, system-ui, -apple-system,
+              "Segoe UI", Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  /* ── Layout ── */
+  --kds-maxw: 1100px;
+
+  --primary:     #6e398e;  /* Koesio violet — alias de --koesio-violet */
+  --primary-700: #5d2e7a;  /* Koesio violet foncé */
+}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Simulateur — Réintégration sociale &amp; fiscale (excédents retraite / prévoyance)</title>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link rel="stylesheet" href="../../assets/kds-tokens.css">
+  <script src="../../assets/config.js"></script>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="topbar">
+<div class="brand">
+<img alt="Logo Koesio Data Solutions" class="logo" src="../../assets/logo-koesio-data-solutions.png"/>
+    <a href="#" id="linkLogoOutils" class="btn btn-ghost" style="margin-left:12px;font-size:14px;" title="Retour aux outils Paie">← Outils Paie</a>
+<div class="brand-text">
+<div class="brand-name">Koesio Data Solutions</div>
+<div class="brand-sub">Simulateur — Réintégration sociale &amp; fiscale (saisie cumulée)</div>
+</div>
+</div>
+<div class="top-actions">
+<div class="view-toggle" title="Affichage Essentiel / Expert">
+<span class="muted tiny">Vue</span>
+<button class="seg seg--active" id="btnViewEssential" type="button">Essentiel</button>
+<button class="seg" id="btnViewExpert" type="button">Expert</button>
+</div>
+<button class="btn btn-ghost" id="btnReset" type="button">Réinitialiser</button>
+<div class="casebar">
+  <select id="caseSelect" aria-label="Charger un cas test">
+    <option value="">Cas tests…</option>
+  </select>
+  <button class="btn btn-ghost" id="btnClearCase" type="button" title="Retirer le cas test chargé">Effacer</button>
+</div>
+<button class="btn" id="btnExportExcel" type="button">Exporter Excel (.xml)</button>
+<button class="btn btn-ghost" id="btnExport" type="button">Exporter configuration (JSON)</button>
+<label class="btn btn-ghost file-btn">
+      Importer configuration
+      <input accept="application/json" id="fileImport" type="file"/>
+</label>
+<a class="btn btn-ghost" href="mode_emploi.html" id="btnHelp" title="Mode d'emploi">Mode d’emploi</a>
+<button class="btn btn-primary" id="btnShare" title="Copier un lien (peut être long)" type="button">Copier un lien</button>
+</div>
+</header>
+<nav aria-label="Fil d'Ariane" style="
+  font-size:12px;color:var(--kds-muted,#5b667a);
+  padding:5px 18px;background:var(--kds-surface,#fff);
+  border-bottom:1px solid var(--kds-border,rgba(0,0,0,.08));
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+  <a href="#" id="bc-portail" style="color:inherit;text-decoration:underline dotted;">PaieKipédia</a>
+  <span aria-hidden="true">›</span>
+  <a href="#" id="bc-outils" style="color:inherit;text-decoration:underline dotted;">Outils Paie</a>
+  <span aria-hidden="true">›</span>
+  <span style="color:var(--kds-text,#1b1e28);font-weight:600;">Réintégration des excédents</span>
+</nav>
+<div id="kds-data-date" style="text-align:center;font-size:12px;color:var(--muted,#888);padding:4px 0;background:var(--card,#fff);border-bottom:1px solid var(--line,#eee);">
+  Valeurs — chargement…
+</div>
+<div class="fatal" id="fatalError" role="alert" style="display:none">
+<div class="fatal__title">Une erreur empêche le simulateur de fonctionner.</div>
+<div class="fatal__msg" id="fatalErrorMsg">Veuillez recharger la page. Si le problème persiste, contactez votre support et transmettez le message ci‑dessous.</div>
+<pre class="fatal__pre" id="fatalErrorPre"></pre>
+</div>
+<main class="wrap">
+<section class="card hero">
+<div class="hero-grid">
+<div>
+<h1>Réintégration sociale et fiscale des excédents</h1>
+<p class="muted">Saisissez vos éléments <strong>en cumul depuis janvier</strong> jusqu’au mois contrôlé.</p>
+<div aria-label="Principe de calcul" class="chips">
+<span class="chip">Cumul à date – déjà réintégré = delta du mois</span>
+<button class="link" id="btnExample" type="button">Voir un exemple</button>
+</div>
+</div>
+<div aria-hidden="true" class="hero-blob"></div>
+</div>
+</section>
+<section class="grid">
+<section class="card">
+<h2>1) Paramètres</h2>
+<div class="form-grid">
+<label class="field">
+<span class="with-info">Année
+            <button class="info" data-help-html="Choisissez l’année à contrôler. Le PASS est prérempli et reste modifiable." data-help-title="Année" type="button">ⓘ</button>
+</span>
+<select id="year"></select>
+<small class="hint">Le PASS se met à jour automatiquement (modifiable).</small>
+</label>
+<label class="field">
+<span class="with-info">PASS annuel (€)
+            <button class="info" data-help-html="Plafond annuel de la Sécurité sociale (PASS). Le simulateur calcule aussi le PMSS = PASS/12." data-help-title="PASS" type="button">ⓘ</button>
+</span>
+<input id="pass" inputmode="decimal" min="0" step="0.01" type="number"/>
+<small class="hint">PMSS (mensuel) = PASS / 12.</small>
+</label>
+<label class="field">
+<span class="with-info">Mois de paie à contrôler
+            <button class="info" data-help-html="Les montants saisis sont &lt;strong&gt;cumulés depuis janvier&lt;/strong&gt; jusqu’au mois sélectionné." data-help-title="Mois contrôlé" type="button">ⓘ</button>
+</span>
+<select id="period"></select>
+<small class="hint">Saisie en cumul depuis janvier.</small>
+</label>
+<label class="field">
+<span class="with-info">Mode de plafonds
+            <button class="info" data-help-html="&lt;strong&gt;Progressif&lt;/strong&gt; : plafonds proratisés au mois contrôlé (pilotage).&lt;br&gt;&lt;strong&gt;Annuel&lt;/strong&gt; : plafonds annuels complets (contrôle fin d’année)." data-help-title="Mode de plafonds" type="button">ⓘ</button>
+</span>
+<select id="capMode">
+<option value="progressive">Progressif (PASS proratisé au mois contrôlé)</option>
+<option value="annual">Annuel (PASS complet)</option>
+</select>
+<small class="hint">Progressif recommandé en cours d’année.</small>
+</label>
+<label class="field inline">
+<input id="allowNegative" type="checkbox"/>
+<span class="with-info">Autoriser un delta négatif (correction)
+            <button class="info" data-help-html="Activez uniquement si vous souhaitez corriger une réintégration déjà opérée (reprise / régularisation)." data-help-title="Delta négatif" type="button"><span aria-hidden="true">ⓘ</span></button>
+</span>
+</label>
+<label class="field inline">
+<input checked="" id="syncR" type="checkbox"/>
+<span class="with-info">Utiliser le même montant pour R<sub>fisc</sub> et R<sub>soc</sub>
+<button class="info" data-help-html="Option pratique si vos bases sont identiques. À désactiver si votre base fiscale de référence diffère de l’assiette sociale." data-help-title="Synchroniser Rfisc/Rsoc" type="button">ⓘ</button>
+</span>
+</label>
+
+<div class="field p1-qual">
+  <div class="with-info"><strong>Qualification (P1 — obligatoire)</strong>
+    <button class="info" data-help-title="Qualification" data-help-html="Pour calculer des plafonds conformes au cadre BOSS, vous devez qualifier le(s) dispositif(s) concernés. Vous pouvez laisser les deux cochés si vous ne souhaitez pas neutraliser une brique." type="button">ⓘ</button>
+  </div>
+  <div class="row inline">
+    <label class="inline"><input id="qualPrev" type="checkbox" checked> Prévoyance collective et obligatoire</label>
+    <label class="inline" style="margin-left:12px"><input id="qualRet" type="checkbox" checked> Retraite supplémentaire (article 83 / PERO)</label>
+  </div>
+</div>
+
+</div>
+</section>
+<section class="card results" id="resultsCard">
+<h2>Résultats (mois sélectionné)</h2>
+<div class="actionable" id="actionableBox">
+  <div class="actionable-title">À passer ce mois-ci</div>
+  <div class="actionable-lines">
+    <div class="actionable-line"><span class="tag tag-soc">Social</span> <span id="actionSocialLine" class="actionable-text">—</span></div>
+    <div class="actionable-line"><span class="tag tag-fis">Fiscal</span> <span id="actionFiscalLine" class="actionable-text">—</span></div>
+  </div>
+  <div class="actionable-note muted tiny" id="actionableNote">Consigne indicative : vérifiez vos rubriques et votre paramétrage paie avant validation.</div>
+</div>
+
+<div class="kpis">
+<div class="kpi">
+<div class="kpi-label">Réintégration sociale à opérer sur le mois</div>
+<div class="kpi-value" id="kpiSocialMonth">—</div>
+<div class="kpi-sub">Retraite + Prévoyance</div>
+</div>
+<div class="kpi">
+<div class="kpi-label">Réintégration fiscale à opérer sur le mois</div>
+<div class="kpi-value" id="kpiFiscalMonth">—</div>
+<div class="kpi-sub"><span id="kpiFiscalSplit">—</span></div>
+</div>
+<div class="kpi kpi--wide kpi-correction" id="kpiCorrectionCard" style="display:none">
+<div class="kpi-label">Correction (delta négatif)</div>
+<div class="kpi-value" id="kpiCorrectionValue">—</div>
+<div class="kpi-sub" id="kpiCorrectionSub">—</div>
+</div>
+</div>
+
+<div aria-live="polite" class="checks checks-block" id="blockingBox" style="display:none">
+  <div class="checks-head">
+    <div class="checks-title">Calcul bloqué — garde-fous P1</div>
+  </div>
+  <ul class="checks-list" id="blockingList"></ul>
+</div>
+
+<div aria-live="polite" class="checks" id="coherenceBox">
+<div class="checks-head">
+  <div class="checks-title">Contrôles de cohérence</div>
+  <button class="btn btn-link btn-sm" id="btnToggleChecks" type="button" style="display:none">Voir plus</button>
+</div>
+<ul class="checks-list" id="coherenceList"></ul>
+</div>
+<div class="result-panels">
+<div class="panel">
+<div class="panel-title">Cumul depuis janvier (YTD)</div>
+<div class="panel-row"><span>Réintégration sociale cumulée</span><strong id="kpiSocialYtd">—</strong></div>
+<div class="panel-row"><span>Réintégration fiscale cumulée</span><strong id="kpiFiscalYtd">—</strong></div>
+</div>
+<div class="panel">
+<div class="panel-title">Frais de santé</div>
+<div class="panel-row"><span>Part patronale « frais de santé » (cumul)</span><strong id="healthYtd">—</strong></div>
+<div class="panel-row"><span>Rappel</span><span class="muted tiny">Imposable dès le 1er euro (souvent déjà intégrée au net imposable).</span></div>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn btn-ghost" id="btnOpenDetails" type="button">Détails de calcul</button>
+<button class="btn btn-ghost" id="btnOpenRules" type="button">Règles utilisées</button>
+</div>
+</section>
+</section>
+<section class="card">
+<h2>2) Saisie cumulée (depuis janvier)</h2>
+<p class="muted">
+      Vous saisissez <strong>une seule fois</strong> les montants cumulés à date (janvier → mois sélectionné).
+      Pour obtenir le montant à opérer sur le mois, indiquez les <strong>réintégrations déjà opérées</strong> les mois précédents.
+    </p>
+<div class="group">
+<h3>Rémunération (cumul)</h3>
+<div class="form-grid">
+<label class="field">
+<span><span class="tt" data-tooltip="R_soc = rémunération brute soumise aux cotisations sociales (assiette de référence). Peut varier selon paramétrages, statuts et exonérations.">R<sub>soc</sub></span> cumulé (brut soumis cotisations)</span>
+<input id="rsoc" inputmode="decimal" min="0" placeholder="0" step="0.01" type="number"/>
+</label>
+<label class="field">
+<span><span class="tt" data-tooltip="R_fisc = rémunération de référence fiscale utilisée pour les plafonds de déduction (retraite/prévoyance). Souvent proche du brut fiscal, mais peut différer (avantages, exonérations, frais de santé, etc.).">R<sub>fisc</sub></span> cumulé (brut de référence fiscale)</span>
+<input id="rfisc" inputmode="decimal" min="0" placeholder="0" step="0.01" type="number"/>
+<small class="hint">Peut inclure la part patronale « frais de santé » imposable.</small>
+</label>
+</div>
+</div>
+<div class="group">
+<h3>Retraite supplémentaire (cumul)</h3>
+<div class="form-grid">
+<label class="field"><span>Part salariale</span><input id="ret_sal" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>Part patronale</span><input id="ret_pat" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>PERE-OB — salarié</span><input id="ret_pereob_sal" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>PERE-OB — employeur</span><input id="ret_pereob_pat" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>CET affecté à retraite/PERE-OB (assimilé employeur)</span><input id="ret_cet_to_ret" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>Abondement employeur PERCO/PERE-CO exonéré</span><input id="ret_abond_perco" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>Jours CET/repos exonérés IR affectés (optionnel)</span><input id="ret_cet_ir_exempt" min="0" placeholder="0" step="0.01" type="number"/></label>
+</div>
+</div>
+<div class="group">
+<h3>Prévoyance complémentaire (cumul)</h3>
+<div class="form-grid">
+<label class="field"><span>Cotisations salariales (frais de santé inclus)</span><input id="prev_sal" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>Cotisations patronales hors frais de santé</span><input id="prev_pat_hors_fs" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>Part patronale « frais de santé »</span><input id="prev_pat_fs" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>Participation CSE (hors frais de santé)</span><input id="prev_cse" min="0" placeholder="0" step="0.01" type="number"/></label>
+</div>
+</div>
+<details class="explain" open="">
+<summary>Réintégrations déjà opérées (cumul jusqu’au mois précédent)</summary>
+<div class="explain-body">
+<div class="form-grid">
+<label class="field"><span>Social déjà réintégré (YTD précédent)</span><input id="applied_soc" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>Fiscal déjà réintégré (cumul mois précédent)</span><input id="applied_fisc" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>… dont cotisations salariales non déductibles (optionnel)</span><input id="applied_fisc_sal" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field expert"><span>… dont contributions patronales imposables (optionnel)</span><input id="applied_fisc_pat" min="0" placeholder="0" step="0.01" type="number"/></label>
+</div>
+<small class="hint">Optionnel : si vous connaissez déjà la ventilation du fiscal réintégré (part « salarié » / part « employeur »), renseignez-la pour obtenir un delta du mois ventilé correctement. Sinon, laissez vide : le simulateur ventile automatiquement le delta selon la proportion calculée à date.</small>
+</div>
+</details>
+<details class="explain expert">
+<summary>Plafonnements (optionnel) : estimation d'impact sur bases plafonnées</summary>
+<div class="explain-body">
+<p class="muted">Renseignez les bases <strong>cumulées avant réintégration</strong> pour estimer la part du delta social du mois qui pourrait encore « rentrer » dans la vieillesse plafonnée / chômage.</p>
+<div class="form-grid">
+<label class="field"><span>Base vieillesse plafonnée cumulée (avant réintégration)</span><input id="base_vieill_plaf" min="0" placeholder="0" step="0.01" type="number"/></label>
+<label class="field"><span>Base chômage cumulée (avant réintégration)</span><input id="base_chom" min="0" placeholder="0" step="0.01" type="number"/></label>
+</div>
+<div class="panel" style="margin-top:12px">
+<div class="panel-title">Estimation (delta social du mois)</div>
+<div class="panel-row"><span>Part qui pourrait aller en vieillesse plafonnée</span><strong id="capVieill">—</strong></div>
+<div class="panel-row"><span>Part qui pourrait aller en chômage plafonné</span><strong id="capChom">—</strong></div>
+</div>
+</div>
+</details>
+</section>
+<footer class="footer">
+<span class="muted tiny">© Koesio Data Solutions — simulateur autonome (index.html)</span>
+<span class="muted tiny">Calcul fondé sur le BOSS (sous réserve des hypothèses saisies) — approche annuelle, hors cas particuliers non couverts.</span>
+</footer>
+</main>
+<!-- Drawer (détails / règles) -->
+<div aria-hidden="true" class="drawer" id="drawer">
+<div class="drawer-overlay" id="drawerOverlay" tabindex="-1"></div>
+<aside aria-label="Détails" aria-modal="true" class="drawer-panel" role="dialog">
+<div class="drawer-head">
+<div class="drawer-title" id="drawerTitle">Détails</div>
+<button class="btn btn--ghost" id="drawerPdf" type="button">Exporter PDF</button><button class="btn btn--ghost" id="drawerExcel" type="button">Exporter Excel</button><button aria-label="Fermer" class="icon-btn" id="drawerClose" type="button">✕</button>
+</div>
+<div class="drawer-tabs" role="tablist">
+<button aria-selected="true" class="tab tab--active" id="tabSteps" role="tab" type="button">Détails de calcul</button>
+<button aria-selected="false" class="tab" id="tabRules" role="tab" type="button">Règles utilisées</button>
+</div>
+<div class="drawer-body">
+<div class="drawer-section" id="drawerSteps">
+<div class="steps" id="stepsBox"></div>
+</div>
+<div class="drawer-section" id="drawerRules" style="display:none">
+<div class="steps" id="rulesBox"></div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Modal (exemple cumul) -->
+<div aria-hidden="true" class="modal" id="exampleModal">
+<div class="modal-overlay" data-close="modal"></div>
+<div aria-label="Exemple" aria-modal="true" class="modal-card" role="dialog">
+<div class="modal-head">
+<div class="modal-title">Exemple — cumul &amp; delta du mois</div>
+<button aria-label="Fermer" class="icon-btn" data-close="modal" type="button">✕</button>
+</div>
+<div class="modal-body">
+<p class="muted">Vous ne saisissez que des <strong>cumuls depuis janvier</strong>. Le delta du mois est obtenu en retranchant le “déjà réintégré (cumul mois précédent)”.</p>
+<div class="panel">
+<div class="panel-title">Exemple</div>
+<div class="panel-row"><span>Contrôle février : saisies = janvier + février</span><strong>✔</strong></div>
+<div class="panel-row"><span>Réintégration fiscale cumulée à fin février</span><strong>120 €</strong></div>
+<div class="panel-row"><span>Fiscal déjà réintégré en janvier</span><strong>40 €</strong></div>
+<div class="panel-row"><span><strong>Delta fiscal à opérer en février</strong></span><strong>80 €</strong></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal (aides) -->
+<div aria-hidden="true" class="modal" id="helpModal">
+<div class="modal-overlay" data-close="help"></div>
+<div aria-label="Aide" aria-modal="true" class="modal-card" role="dialog">
+<div class="modal-head">
+<div class="modal-title" id="helpTitle">Aide</div>
+<button aria-label="Fermer" class="icon-btn" data-close="help" type="button">✕</button>
+</div>
+<div class="modal-body" id="helpBody"></div>
+</div>
+</div>
+<!-- Calculatrice (basique) -->
+<button aria-label="Ouvrir la calculatrice" class="fab" id="fabCalc" type="button"><span class="fab-icon">🧮</span><span class="fab-label">Calculatrice</span></button>
+<div aria-hidden="true" class="calc" id="calc">
+<div class="calc-head" id="calcDrag">
+<div class="calc-title">Calculatrice</div>
+<button aria-label="Fermer" class="icon-btn" id="calcClose" type="button">✕</button>
+</div>
+<div class="calc-body">
+<input aria-label="Affichage" class="calc-display" id="calcDisplay" inputmode="decimal" readonly="" type="text" value="0"/>
+<div aria-label="Touches" class="calc-grid">
+<button class="calc-btn" data-c="AC" type="button">AC</button>
+<button class="calc-btn" data-c="DEL" type="button">⌫</button>
+<button class="calc-btn" data-c="%" type="button">%</button>
+<button class="calc-btn calc-op" data-c="/" type="button">÷</button>
+<button class="calc-btn" data-c="7" type="button">7</button>
+<button class="calc-btn" data-c="8" type="button">8</button>
+<button class="calc-btn" data-c="9" type="button">9</button>
+<button class="calc-btn calc-op" data-c="*" type="button">×</button>
+<button class="calc-btn" data-c="4" type="button">4</button>
+<button class="calc-btn" data-c="5" type="button">5</button>
+<button class="calc-btn" data-c="6" type="button">6</button>
+<button class="calc-btn calc-op" data-c="-" type="button">−</button>
+<button class="calc-btn" data-c="1" type="button">1</button>
+<button class="calc-btn" data-c="2" type="button">2</button>
+<button class="calc-btn" data-c="3" type="button">3</button>
+<button class="calc-btn calc-op" data-c="+" type="button">+</button>
+<button class="calc-btn" data-c="0" type="button">0</button>
+<button class="calc-btn" data-c="," type="button">,</button>
+<button class="calc-btn" data-c="." type="button">.</button>
+<button class="calc-btn calc-eq" data-c="=" type="button">=</button>
+</div>
+</div>
+</div>
+<script src="core.js"></script>
+<script src="accessibility.js"></script>
+<script src="addons-pdf.js" defer onerror="console.error('addons-pdf.js failed')"></script>
+
+  <script>
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var el = document.getElementById("linkLogoOutils");
+      if(el) el.href = cfg.URL_OUTILS || "../../";
+    })();
+  </script>
+
+  <script>
+    // Affichage date de mise à jour des valeurs
+    fetch('./meta.json').then(r=>r.json()).then(m=>{
+      var el = document.getElementById('kds-data-date');
+      if(el && m.data_updated) el.textContent = 'Valeurs ' + m.annee + ' — mises à jour le ' + m.data_updated + ' • Outil indicatif, à vérifier en logiciel de paie';
+    }).catch(()=>{});
+  </script>
+
+  <script>
+    // Fil d'Ariane — injection URLs
+    (function(){
+      var cfg = window.PAIEKIPEDIA_CONFIG || {};
+      var p = document.getElementById('bc-portail');
+      var o = document.getElementById('bc-outils');
+      if(p) p.href = cfg.URL_PORTAIL || '../../';
+      if(o) o.href = cfg.URL_OUTILS   || '../';
+    })();
+  </script>
+</body>
+</html>
